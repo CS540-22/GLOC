@@ -11,7 +11,7 @@ shell2http = Shell2HTTP(app=app, executor=executor, base_url_prefix="/")
 
 
 def callback(context, future):
-    print(context, future.result())
+    print(context, future.result().get("report", "NONE"))
 
 
 def url_verification(f):
@@ -24,3 +24,7 @@ def url_verification(f):
 
 shell2http.register_command(
     endpoint="ls", command_name="ls", callback_fn=callback, decorators=[url_verification])
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0")
