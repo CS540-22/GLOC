@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: cloc-api
-        image: bgreenb11/cloc-api:latest
+        image: bgreenb11/cloc-api:arm
         resources:
           limits:
             memory: "128Mi"
