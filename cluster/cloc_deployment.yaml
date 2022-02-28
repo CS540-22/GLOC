@@ -1,3 +1,4 @@
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -29,7 +30,9 @@ spec:
     spec:
       containers:
       - name: cloc-api
-        image: cloc-api:latest
+        image: bgreenb11/cloc-api:latest
+        imagePullSecrets:
+        - name: regcred
         resources:
           limits:
             memory: "128Mi"
