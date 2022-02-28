@@ -31,8 +31,6 @@ spec:
       containers:
       - name: cloc-api
         image: bgreenb11/cloc-api:latest
-        imagePullSecrets:
-        - name: regcred
         resources:
           limits:
             memory: "128Mi"
@@ -40,3 +38,5 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 5000
+      imagePullSecrets:
+      - name: regcred
