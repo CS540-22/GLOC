@@ -35,8 +35,6 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
-        imagePullPolicy: Never
         ports:
         - containerPort: 5000
-      imagePullSecrets:
-      - name: regcred
+
