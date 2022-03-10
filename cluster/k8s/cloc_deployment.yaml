@@ -1,0 +1,72 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloc-api-service
+spec:
+  selector:
+    app: cloc-api
+  ports:
+  - name: http
+    protocol: "TCP"
+    port: 80
+    targetPort: 5000
+  - name: http
+    protocol: "TCP"
+    port: 443
+    targetPort: 5000
+  type: LoadBalancer
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloc-api
+spec:
+  selector:
+    matchLabels:
+      app: cloc-api
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: cloc-api
+    spec:
+      containers:
+      - name: cloc-api
+        image: bgreenb11/cloc-api:arm
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5000
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gloc
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: https
+    cert-manager.io/cluster-issuer: cloudflare
+spec:
+  tls:
+  - hosts:
+    - gloc.homelab.benlg.dev
+    secretName: gloc-tls
+  rules:
+  - host: gloc.homelab.benlg.dev
+    http:
+      paths:
+      - backend:
+          service:
+            name: cloc-api-service
+            port:
+              name: http
+        path: /gloc
+        pathType: Prefix
