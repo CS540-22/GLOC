@@ -1,0 +1,25 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: cloudflare
+spec:
+  acme:
+    email: ben.greenberg11@outlook.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: cert-manager-cloudflare
+    solvers:
+      - http01:
+          ingress:
+            class: traefik
+      - dns01:
+          cloudflare:
+            email: ben.greenberg11@outlook.com
+            apiKeySecretRef:
+              name: cloudflare-api-key-secret
+              key: api-key
+        selector:
+          dnsZones:
+          - "homelab.benlg.dev"
+            
+          
