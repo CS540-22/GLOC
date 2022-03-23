@@ -1,3 +1,3 @@
 # GLOC
-![main](https://github.com/chenrui333/github-action-test/workflows/repository-dispatch/badge.svg)
+![main](https://github.com/CS540-22/GLOC/actions/workflows/main.yml/badge.svg) <br>
 Graphical Lines of Code
