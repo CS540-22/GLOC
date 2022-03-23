@@ -1,4 +1,5 @@
 import 'utilities.dart';
+import 'package:collection/collection.dart';
 
 class ClocRequest {
   final Uri giturl;
@@ -6,34 +7,57 @@ class ClocRequest {
   ClocRequest(String url) : giturl = Uri.parse(url);
 
   Uri generateRequestURL() {
-    // TODO build actual url
-    // return "" + giturl.toString();
-    return Uri.parse(
-        "https://raw.githubusercontent.com/CS540-22/GLOC/main/cloc_samples/attendio.min.json");
+    final queryParameters = {
+      'giturl': '$giturl',
+    };
+
+    return Uri.https('gloc.homelab.benlg.dev', 'gloc', queryParameters);
   }
 }
 
 class LanguageResult {
+  final String name;
   final int files;
   final int blank;
   final int comment;
   final int code;
 
   LanguageResult({
+    required this.name,
     required this.files,
     required this.blank,
     required this.comment,
     required this.code,
   });
 
-  factory LanguageResult.fromJson(Map<String, dynamic> json) {
+  factory LanguageResult.fromJson(String name, Map<String, dynamic> json) {
     return LanguageResult(
+      name: name,
       files: json['nFiles'],
       blank: json['blank'],
       comment: json['comment'],
       code: json['code'],
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LanguageResult &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          files == other.files &&
+          blank == other.blank &&
+          comment == other.comment &&
+          code == other.code;
+
+  @override
+  int get hashCode =>
+      name.hashCode ^
+      files.hashCode ^
+      blank.hashCode ^
+      comment.hashCode ^
+      code.hashCode;
 }
 
 class ClocResult {
@@ -64,4 +88,25 @@ class ClocResult {
       languages: extractLanguagesFromJson(json),
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ClocResult &&
+          runtimeType == other.runtimeType &&
+          totalFiles == other.totalFiles &&
+          totalLines == other.totalLines &&
+          totalBlank == other.totalBlank &&
+          totalComment == other.totalComment &&
+          totalCode == other.totalCode &&
+          const DeepCollectionEquality().equals(languages, other.languages);
+
+  @override
+  int get hashCode =>
+      totalFiles.hashCode ^
+      totalLines.hashCode ^
+      totalBlank.hashCode ^
+      totalComment.hashCode ^
+      totalCode.hashCode ^
+      languages.hashCode;
 }
