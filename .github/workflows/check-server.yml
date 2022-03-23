@@ -22,10 +22,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-#       - name: Connect Tailscale
-#         uses: tailscale/github-action@v1
-#         with:
-#           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+      - name: Connect Tailscale
+        uses: tailscale/github-action@v1
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
       - name: Ping CLOC API Endpoint
         run: |
           echo "::set-output name=RESPONSE::$(curl -Is http://gloc.homelab.benlg.dev/gloc?giturl=https://github.com/attendio/attendio.git | grep HTTP | cut -d ' ' -f2)"
