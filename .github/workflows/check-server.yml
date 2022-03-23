@@ -31,7 +31,7 @@ jobs:
           echo "::set-output name=RESPONSE::$(curl -Is http://gloc.homelab.benlg.dev/gloc?giturl=https://github.com/attendio/attendio.git | grep HTTP | cut -d ' ' -f2)"
         id: endpoint_check
       - name: Verify Endpoint Check
-        if: steps.endpoint_check.RESPONSE != "200"
+        if: steps.endpoint_check.RESPONSE != 200
         uses: actions/github-script@v3
         with:
           script: |
