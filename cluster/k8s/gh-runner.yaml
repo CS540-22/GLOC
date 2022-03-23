@@ -1,0 +1,28 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: gloc-runner-deployment
+  namespace: action-runners
+spec:
+  template:
+    spec:
+      repository: CS540-22/GLOC
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: gloc-runner-deployment-autoscaler
+  namespace: action-runners
+spec:
+  scaleDownDelaySecondsAfterScaleOut: 300
+  scaleTargetRef:
+    name: gloc-runner-deployment
+  minReplicas: 1 
+  maxReplicas: 4
+  scaleUpTriggers:
+  - githubEvent:
+      pullRequest:
+        types: ["synchronize"]
+        branches: ["main"]
+    amount: 1
+    duration: "5m"

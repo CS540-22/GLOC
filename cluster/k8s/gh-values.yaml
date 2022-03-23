@@ -1,0 +1,26 @@
+githubWebhookServer:
+  enabled: true
+  secret:
+    enabled: true
+    create: true
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      cert-manager.io/cluster-issuer: cloudflare
+    serviceAccount:
+      name: runners-service
+    hosts:
+    - host: runners.homelab.benlg.dev
+      paths: 
+      - backend:
+          service:
+            name: runners-service
+            port: 
+              name: 80
+        pathType: Prefix
+        path: /
+    tls:
+    - hosts:
+      - runners.homelab.benlg.dev
+      secretName: runners-tls
