@@ -30,7 +30,6 @@ jobs:
       - name: Run Tailscale
         shell: bash
         run: |
-          sudo tailscaled 2>~/tailscaled.log &
           HOSTNAME="github-$(cat /etc/hostname)"
           sudo tailscale up --authkey ${{ secrets.TAILSCALE_AUTHKEY }} --hostname=${HOSTNAME}
       - name: Ping CLOC API Endpoint
