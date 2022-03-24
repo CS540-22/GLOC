@@ -38,7 +38,7 @@ jobs:
         id: endpoint_check
       - name: Verify Endpoint Check
         if: steps.endpoint_check.RESPONSE != 200
-        uses: actions/github-script@v3
+        uses: actions/github-script@v6
         with:
           script: |
               core.setFailed('CLOC API endpoint did not pass liveliness probe!')
