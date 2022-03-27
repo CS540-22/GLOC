@@ -1,0 +1,19 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+python-dotenv = "*"
+
+[packages]
+flask = "*"
+flask-executor = "*"
+flask-wtf = "*"
+gitpython = "*"
+
+[requires]
+python_version = "3.9"
+
+[scripts]
+watch_flask = "flask run"
