@@ -68,9 +68,11 @@ def execute_cloc(job_hash, runner_type, **kwargs):
     # Run Cloc
     history = []
     if runner_type == "single":
-        history.append(subprocess.run(
+        result = subprocess.run(
             args=["cloc", "-json", path], capture_output=True, text=True
-        ).stdout)
+        ).stdout
+        result = json.loads(result)
+        history.append(result)
 
     elif runner_type == "history":
         history = []
