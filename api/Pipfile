@@ -11,6 +11,7 @@ flask = "*"
 flask-executor = "*"
 flask-wtf = "*"
 gitpython = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.9"

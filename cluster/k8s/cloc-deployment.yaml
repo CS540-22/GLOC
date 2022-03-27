@@ -24,15 +24,17 @@ spec:
   selector:
     matchLabels:
       app: cloc-api
-  replicas: 4
+  replicas: 2
   template:
     metadata:
       labels:
         app: cloc-api
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
       - name: cloc-api
-        image: bgreenb11/cloc-api:arm
+        image: bgreenb11/flask-cloc-api:arm
         resources:
           limits:
             memory: "128Mi"
@@ -64,5 +66,5 @@ spec:
             name: cloc-api-service
             port:
               name: http
-        path: /gloc
+        path: /
         pathType: Prefix

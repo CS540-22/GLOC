@@ -145,4 +145,5 @@ def history():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.config["DEBUG"] = False
+    app.run(host='0.0.0.0')
