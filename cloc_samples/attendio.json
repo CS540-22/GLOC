@@ -1,11 +1,14 @@
-{"header" : {
-  "cloc_url"           : "github.com/AlDanial/cloc",
-  "cloc_version"       : "1.92",
-  "elapsed_seconds"    : 0.678646087646484,
-  "n_files"            : 60,
-  "n_lines"            : 3052,
-  "files_per_second"   : 88.411325272761,
-  "lines_per_second"   : 4497.18941220778},
+{"header": {
+        "cloc_url": "github.com/AlDanial/cloc", 
+        "cloc_version": "1.81", 
+        "commit_hash": "45a30ea9afa413e226ca8614179c011d545ca883", 
+        "date": 1415217595, 
+        "elapsed_seconds": 0.00584506988525391, 
+        "files_per_second": 1881.92788383097, 
+        "lines_per_second": 20187.953662914, 
+        "n_files": 11, 
+        "n_lines": 118
+      },
 "Dart" :{
   "nFiles": 26,
   "blank": 190,

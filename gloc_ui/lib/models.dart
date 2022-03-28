@@ -1,4 +1,5 @@
-import 'utilities.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:collection/collection.dart';
 
 class ClocRequest {
@@ -70,11 +71,11 @@ class LanguageResult {
 class ClocResult {
   final int totalFiles;
   final int totalLines;
-  String? commitHash;
-  DateTime? date;
   final int totalBlank;
   final int totalComment;
   final int totalCode;
+  String? commitHash;
+  DateTime? date;
 
   List<LanguageResult> languages;
 
@@ -85,21 +86,35 @@ class ClocResult {
     required this.totalComment,
     required this.totalCode,
     required this.languages,
-    commitHash,
-    date,
+    this.commitHash,
+    this.date,
   });
 
   factory ClocResult.fromJson(Map<String, dynamic> json) {
+    List<LanguageResult> languages = [];
+    for (var language in json.keys) {
+      if (language == "header" || language == "SUM") continue;
+      languages.add(LanguageResult.fromJson(language, json[language]));
+    }
+
     return ClocResult(
       totalFiles: json['header']['n_files'],
       totalLines: json['header']['n_lines'],
-      commitHash: json['header']['commit_hash'],
-      date: DateTime.fromMillisecondsSinceEpoch(json['header']['date'] * 1000),
       totalBlank: json['SUM']['blank'],
       totalComment: json['SUM']['comment'],
       totalCode: json['SUM']['blank'],
-      languages: extractLanguagesFromJson(json),
+      languages: languages,
+      commitHash: json['header']['commit_hash'],
+      date: json['header']['date'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(json['header']['date'] * 1000)
+          : null,
     );
+  }
+
+  factory ClocResult.fromBytes(Uint8List bytes) {
+    var jsonString = String.fromCharCodes(bytes);
+    var json = jsonDecode(jsonString);
+    return ClocResult.fromJson(json);
   }
 
   Map<String, dynamic> toJson() {

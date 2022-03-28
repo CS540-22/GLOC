@@ -1,16 +1,8 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'models.dart';
 import 'package:http/http.dart' as http;
 import 'dart:developer';
-
-List<LanguageResult> extractLanguagesFromJson(Map<String, dynamic> json) {
-  List<LanguageResult> languages = [];
-  for (var language in json.keys) {
-    if (language == "header" || language == "SUM") continue;
-    languages.add(LanguageResult.fromJson(language, json[language]));
-  }
-  return languages;
-}
 
 Future<ClocResult> sendClocRequest(ClocRequest request) async {
   var response = await http.get(request.generateRequestURL());
@@ -29,6 +21,27 @@ Future<List<ClocResult>> sendClocHistoryRequest(ClocRequest request) async {
         .toList();
   } else {
     throw Exception('Failed Cloc History Request');
+  }
+}
+
+List<ClocResult>? getResultsFromFile(Uint8List bytes) {
+  // Attempt to read bytes as single cloc result
+  try {
+    var result = [ClocResult.fromBytes(bytes)];
+    print("single");
+    return result;
+  } catch (e) {
+    // Attempt to read bytes as cloc history request
+    try {
+      var result = (json.decode(String.fromCharCodes(bytes)) as List)
+          .map((i) => ClocResult.fromJson(i))
+          .toList();
+      print("history");
+      return result;
+    } catch (e) {
+      print("invalid");
+      return null;
+    }
   }
 }
 

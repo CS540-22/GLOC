@@ -1,5 +1,4 @@
-{
-  "results": [
+[
     {
       "Bourne Shell": {
         "blank": 0, 
@@ -165,6 +164,4 @@
         "n_lines": 118
       }
     }
-  ], 
-  "status": "FINISHED"
-}
+  ]

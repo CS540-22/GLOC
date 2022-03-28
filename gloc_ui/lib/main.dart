@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'models.dart';
 import 'results.dart';
 import 'utilities.dart';
@@ -43,6 +46,9 @@ class MyCustomFormState extends State<MyCustomForm> {
   final _formKey = GlobalKey<FormState>();
   final urlController =
       TextEditingController(text: 'https://github.com/attendio/attendio');
+  late DropzoneViewController controller1;
+  String message1 = 'Drop something here';
+  bool highlighted1 = false;
 
   @override
   void dispose() {
@@ -90,8 +96,61 @@ class MyCustomFormState extends State<MyCustomForm> {
             },
             child: const Text('Submit'),
           ),
+          Expanded(
+            child: Container(
+              color: highlighted1 ? Colors.red : Colors.transparent,
+              child: Stack(
+                children: [
+                  buildZone1(context),
+                  Center(child: Text(message1)),
+                ],
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              var files =
+                  await controller1.pickFiles(mime: ['application/json']);
+              var bytes = await controller1.getFileData(files.first);
+              var result = getResultsFromFile(bytes);
+              print(result);
+            },
+            child: const Text('Pick file'),
+          ),
         ],
       ),
     );
   }
+
+  Widget buildZone1(BuildContext context) => Builder(
+        builder: (context) => DropzoneView(
+          operation: DragOperation.copy,
+          cursor: CursorType.grab,
+          onCreated: (ctrl) => controller1 = ctrl,
+          onLoaded: () => print('Zone 1 loaded'),
+          onError: (ev) => print('Zone 1 error: $ev'),
+          onHover: () {
+            setState(() => highlighted1 = true);
+            print('Zone 1 hovered');
+          },
+          onLeave: () {
+            setState(() => highlighted1 = false);
+            print('Zone 1 left');
+          },
+          onDrop: (ev) async {
+            print('Zone 1 drop: ${ev.name}');
+            setState(() {
+              message1 = '${ev.name} dropped';
+              highlighted1 = false;
+            });
+            final bytes = await controller1.getFileData(ev);
+            var result = getResultsFromFile(bytes);
+            // print(result);
+          },
+          onDropMultiple: (ev) async {
+            // message1 = 'Please only Select One File';
+            // print('Zone 1 drop multiple: $ev');
+          },
+        ),
+      );
 }
