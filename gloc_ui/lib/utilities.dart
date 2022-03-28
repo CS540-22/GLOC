@@ -21,6 +21,17 @@ Future<ClocResult> sendClocRequest(ClocRequest request) async {
   }
 }
 
+Future<List<ClocResult>> sendClocHistoryRequest(ClocRequest request) async {
+  var response = await http.get(request.generateRequestURL());
+  if (response.statusCode == 200 && response.body.isNotEmpty) {
+    return (json.decode(response.body) as List)
+        .map((i) => ClocResult.fromJson(i))
+        .toList();
+  } else {
+    throw Exception('Failed Cloc History Request');
+  }
+}
+
 String? validateGithubURL(String? urlString) {
   if (urlString == null) return 'Enter a valid Github URL';
   if (urlString.isEmpty) return 'URL cannot be blank';

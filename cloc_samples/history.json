@@ -1,0 +1,170 @@
+{
+  "results": [
+    {
+      "Bourne Shell": {
+        "blank": 0, 
+        "code": 3, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "Gradle": {
+        "blank": 2, 
+        "code": 7, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "Groovy": {
+        "blank": 2, 
+        "code": 24, 
+        "comment": 0, 
+        "nFiles": 5
+      }, 
+      "Java": {
+        "blank": 8, 
+        "code": 28, 
+        "comment": 24, 
+        "nFiles": 2
+      }, 
+      "Maven": {
+        "blank": 0, 
+        "code": 18, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "SUM": {
+        "blank": 12, 
+        "code": 82, 
+        "comment": 24, 
+        "nFiles": 11
+      }, 
+      "YAML": {
+        "blank": 0, 
+        "code": 2, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "header": {
+        "cloc_url": "github.com/AlDanial/cloc", 
+        "cloc_version": "1.81", 
+        "commit_hash": "45a30ea9afa413e226ca8614179c011d545ca883", 
+        "date": 1415217595, 
+        "elapsed_seconds": 0.00584506988525391, 
+        "files_per_second": 1881.92788383097, 
+        "lines_per_second": 20187.953662914, 
+        "n_files": 11, 
+        "n_lines": 118
+      }
+    }, 
+    {
+      "Bourne Shell": {
+        "blank": 0, 
+        "code": 3, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "Gradle": {
+        "blank": 2, 
+        "code": 7, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "Groovy": {
+        "blank": 2, 
+        "code": 24, 
+        "comment": 0, 
+        "nFiles": 5
+      }, 
+      "Java": {
+        "blank": 8, 
+        "code": 28, 
+        "comment": 24, 
+        "nFiles": 2
+      }, 
+      "Maven": {
+        "blank": 0, 
+        "code": 18, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "SUM": {
+        "blank": 12, 
+        "code": 82, 
+        "comment": 24, 
+        "nFiles": 11
+      }, 
+      "YAML": {
+        "blank": 0, 
+        "code": 2, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "header": {
+        "cloc_url": "github.com/AlDanial/cloc", 
+        "cloc_version": "1.81", 
+        "commit_hash": "ebbbf773431ba07510251bb03f9525c7bab2b13a", 
+        "date": 1415217635, 
+        "elapsed_seconds": 0.00540804862976074, 
+        "files_per_second": 2034.00537847727, 
+        "lines_per_second": 21819.3304236653, 
+        "n_files": 11, 
+        "n_lines": 118
+      }
+    }, 
+    {
+      "Bourne Shell": {
+        "blank": 0, 
+        "code": 3, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "Gradle": {
+        "blank": 2, 
+        "code": 7, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "Groovy": {
+        "blank": 2, 
+        "code": 24, 
+        "comment": 0, 
+        "nFiles": 5
+      }, 
+      "Java": {
+        "blank": 8, 
+        "code": 28, 
+        "comment": 24, 
+        "nFiles": 2
+      }, 
+      "Maven": {
+        "blank": 0, 
+        "code": 18, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "SUM": {
+        "blank": 12, 
+        "code": 82, 
+        "comment": 24, 
+        "nFiles": 11
+      }, 
+      "YAML": {
+        "blank": 0, 
+        "code": 2, 
+        "comment": 0, 
+        "nFiles": 1
+      }, 
+      "header": {
+        "cloc_url": "github.com/AlDanial/cloc", 
+        "cloc_version": "1.81", 
+        "commit_hash": "ef7bebf8bdb1919d947afe46ab4b2fb4278039b3", 
+        "date": 1415384839, 
+        "elapsed_seconds": 0.00698709487915039, 
+        "files_per_second": 1574.33099024091, 
+        "lines_per_second": 16888.2778953115, 
+        "n_files": 11, 
+        "n_lines": 118
+      }
+    }
+  ], 
+  "status": "FINISHED"
+}

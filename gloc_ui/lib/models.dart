@@ -40,6 +40,13 @@ class LanguageResult {
     );
   }
 
+  Map<String, dynamic> toJson() => {
+        'nFiles': files,
+        'blank': blank,
+        'comment': comment,
+        'code': code,
+      };
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -63,6 +70,8 @@ class LanguageResult {
 class ClocResult {
   final int totalFiles;
   final int totalLines;
+  String? commitHash;
+  DateTime? date;
   final int totalBlank;
   final int totalComment;
   final int totalCode;
@@ -76,17 +85,41 @@ class ClocResult {
     required this.totalComment,
     required this.totalCode,
     required this.languages,
+    commitHash,
+    date,
   });
 
   factory ClocResult.fromJson(Map<String, dynamic> json) {
     return ClocResult(
       totalFiles: json['header']['n_files'],
       totalLines: json['header']['n_lines'],
+      commitHash: json['header']['commit_hash'],
+      date: DateTime.fromMillisecondsSinceEpoch(json['header']['date'] * 1000),
       totalBlank: json['SUM']['blank'],
       totalComment: json['SUM']['comment'],
       totalCode: json['SUM']['blank'],
       languages: extractLanguagesFromJson(json),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = {
+      'header': {
+        'commit_hash': commitHash,
+        'date': date,
+        'n_files': totalFiles,
+        'n_lines': totalLines,
+      },
+      'SUM': {
+        'blank': totalBlank,
+        'comment': totalComment,
+        'code': totalCode,
+      }
+    };
+    for (var language in languages) {
+      json[language.name] = language.toJson();
+    }
+    return json;
   }
 
   @override
