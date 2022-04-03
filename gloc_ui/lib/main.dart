@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'details.dart';
 import 'models.dart';
 import 'results.dart';
 import 'utilities.dart';
@@ -113,6 +114,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                   await controller1.pickFiles(mime: ['application/json']);
               var bytes = await controller1.getFileData(files.first);
               var result = getResultsFromFile(bytes);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailsPage(
+                    clocResult: result![0],
+                  ),
+                ),
+              );
               print(result);
             },
             child: const Text('Pick file'),
@@ -145,6 +154,14 @@ class MyCustomFormState extends State<MyCustomForm> {
             });
             final bytes = await controller1.getFileData(ev);
             var result = getResultsFromFile(bytes);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailsPage(
+                  clocResult: result![0],
+                ),
+              ),
+            );
             // print(result);
           },
           onDropMultiple: (ev) async {

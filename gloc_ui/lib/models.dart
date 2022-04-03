@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_palette/flutter_palette.dart';
+import 'package:gloc_ui/utilities.dart';
 
 class ClocRequest {
   final Uri giturl;
@@ -16,12 +20,37 @@ class ClocRequest {
   }
 }
 
+class Icon {
+  late String path;
+  late ColorPalette colorPalette = ColorPalette.empty();
+
+  Icon(String languageName) {
+    path = 'icons/' + getLanguageImagePath(languageName);
+    List<String> colorStrings = getLanguageImageColors(languageName);
+    for (var i = 0; i < 3; i++) {
+      if (i < colorStrings.length) {
+        RgbColor color = RgbColor.fromHex(colorStrings[i]);
+        colorPalette.add(color);
+      } else {
+        // colorPalette.add(colorPalette[i - 1].rotateHue(30));
+        // colorPalette.add(ColorPalette.random(1)[0]);
+
+        var hslColor = HSLColor.fromColor(colorPalette[i - 1]);
+        var newLightness = min(hslColor.lightness + .3, 1.0);
+        colorPalette.add(hslColor.withLightness(newLightness).toColor());
+      }
+    }
+    colorPalette.sortBy(ColorSortingProperty.darkest);
+  }
+}
+
 class LanguageResult {
   final String name;
   final int files;
   final int blank;
   final int comment;
   final int code;
+  final Icon icon;
 
   LanguageResult({
     required this.name,
@@ -29,6 +58,7 @@ class LanguageResult {
     required this.blank,
     required this.comment,
     required this.code,
+    required this.icon,
   });
 
   factory LanguageResult.fromJson(String name, Map<String, dynamic> json) {
@@ -38,6 +68,7 @@ class LanguageResult {
       blank: json['blank'],
       comment: json['comment'],
       code: json['code'],
+      icon: Icon(name),
     );
   }
 
@@ -74,6 +105,7 @@ class ClocResult {
   final int totalBlank;
   final int totalComment;
   final int totalCode;
+  final ColorPalette colorPalette;
   String? commitHash;
   DateTime? date;
 
@@ -86,6 +118,7 @@ class ClocResult {
     required this.totalComment,
     required this.totalCode,
     required this.languages,
+    required this.colorPalette,
     this.commitHash,
     this.date,
   });
@@ -104,6 +137,11 @@ class ClocResult {
       totalComment: json['SUM']['comment'],
       totalCode: json['SUM']['blank'],
       languages: languages,
+      colorPalette: ColorPalette.from([
+        RgbColor.fromHex('1d3449'),
+        RgbColor.fromHex('596f62'),
+        RgbColor.fromHex('668060')
+      ]),
       commitHash: json['header']['commit_hash'],
       date: json['header']['date'] != null
           ? DateTime.fromMillisecondsSinceEpoch(json['header']['date'] * 1000)
