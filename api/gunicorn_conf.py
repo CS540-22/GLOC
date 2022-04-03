@@ -1,0 +1,10 @@
+bind = "0.0.0.0:5000"
+loglevel = "info"
+errorlog = "-"
+accesslog = "-"
+worker_tmp_dir = "/dev/shm"
+graceful_timeout = 120
+timeout = 120
+keepalive = 5
+threads = 4
+workers = 4

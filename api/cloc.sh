@@ -1,5 +1,3 @@
 #!/bin/sh
 
-git clone --depth 1 $1 ./downloaded_code
-cloc -json ./downloaded_code | tr -d " \n"
-rm -rf ./downloaded_code
+exec gunicorn --config app/gunicorn_conf.py app.wsgi:app
