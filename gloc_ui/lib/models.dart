@@ -20,11 +20,11 @@ class ClocRequest {
   }
 }
 
-class Icon {
+class LangIcon {
   late String path;
   late ColorPalette colorPalette = ColorPalette.empty();
 
-  Icon(String languageName) {
+  LangIcon(String languageName) {
     path = 'icons/' + getLanguageImagePath(languageName);
     List<String> colorStrings = getLanguageImageColors(languageName);
     for (var i = 0; i < 3; i++) {
@@ -46,11 +46,11 @@ class Icon {
 
 class LanguageResult {
   final String name;
-  final int files;
-  final int blank;
-  final int comment;
-  final int code;
-  final Icon icon;
+  int files;
+  int blank;
+  int comment;
+  int code;
+  final LangIcon icon;
 
   LanguageResult({
     required this.name,
@@ -68,7 +68,7 @@ class LanguageResult {
       blank: json['blank'],
       comment: json['comment'],
       code: json['code'],
-      icon: Icon(name),
+      icon: LangIcon(name),
     );
   }
 
@@ -130,12 +130,15 @@ class ClocResult {
       languages.add(LanguageResult.fromJson(language, json[language]));
     }
 
+    // sorted into descending code count
+    languages.sort((b, a) => a.code.compareTo(b.code));
+
     return ClocResult(
       totalFiles: json['header']['n_files'],
       totalLines: json['header']['n_lines'],
       totalBlank: json['SUM']['blank'],
       totalComment: json['SUM']['comment'],
-      totalCode: json['SUM']['blank'],
+      totalCode: json['SUM']['code'],
       languages: languages,
       colorPalette: ColorPalette.from([
         RgbColor.fromHex('1d3449'),

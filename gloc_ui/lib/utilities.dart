@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'models.dart';
 import 'package:http/http.dart' as http;
-import 'dart:developer';
 
 Future<ClocResult> sendClocRequest(ClocRequest request) async {
   var response = await http.get(request.generateRequestURL());
@@ -28,7 +27,7 @@ List<ClocResult>? getResultsFromFile(Uint8List bytes) {
   // Attempt to read bytes as single cloc result
   try {
     var result = [ClocResult.fromBytes(bytes)];
-    print("single");
+    // print("single");
     return result;
   } catch (e) {
     // Attempt to read bytes as cloc history request
@@ -36,10 +35,10 @@ List<ClocResult>? getResultsFromFile(Uint8List bytes) {
       var result = (json.decode(String.fromCharCodes(bytes)) as List)
           .map((i) => ClocResult.fromJson(i))
           .toList();
-      print("history");
+      // print("history");
       return result;
     } catch (e) {
-      print("invalid");
+      // print("invalid");
       return null;
     }
   }

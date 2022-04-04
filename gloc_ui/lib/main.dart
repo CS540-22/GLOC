@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'details.dart';
@@ -122,7 +120,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ),
                 ),
               );
-              print(result);
             },
             child: const Text('Pick file'),
           ),
@@ -136,18 +133,18 @@ class MyCustomFormState extends State<MyCustomForm> {
           operation: DragOperation.copy,
           cursor: CursorType.grab,
           onCreated: (ctrl) => controller1 = ctrl,
-          onLoaded: () => print('Zone 1 loaded'),
-          onError: (ev) => print('Zone 1 error: $ev'),
+          // onLoaded: () => print('Zone 1 loaded'),
+          // onError: (ev) => print('Zone 1 error: $ev'),
           onHover: () {
             setState(() => highlighted1 = true);
-            print('Zone 1 hovered');
+            // print('Zone 1 hovered');
           },
           onLeave: () {
             setState(() => highlighted1 = false);
-            print('Zone 1 left');
+            // print('Zone 1 left');
           },
           onDrop: (ev) async {
-            print('Zone 1 drop: ${ev.name}');
+            // print('Zone 1 drop: ${ev.name}');
             setState(() {
               message1 = '${ev.name} dropped';
               highlighted1 = false;
