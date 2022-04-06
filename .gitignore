@@ -25,7 +25,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+.lib/
 lib64/
 parts/
 sdist/
@@ -163,6 +163,5 @@ cython_debug/
 # End of https://www.toptal.com/developers/gitignore/api/flask
 
 .vscode
-
 api/.dev
 api/config.py
