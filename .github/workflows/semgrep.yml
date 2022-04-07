@@ -42,6 +42,7 @@ jobs:
           config: >-
             p/ci
             p/flask
+            p/python
           generateSarif: "1"
 
       # Upload SARIF file generated in previous step
