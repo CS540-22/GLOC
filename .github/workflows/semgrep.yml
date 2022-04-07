@@ -41,6 +41,7 @@ jobs:
 #           publishDeployment: ${{ secrets.SEMGREP_DEPLOYMENT_ID }}
           config: >-
             p/ci
+            p/flask
           generateSarif: "1"
 
       # Upload SARIF file generated in previous step
