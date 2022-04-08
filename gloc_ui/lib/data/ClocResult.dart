@@ -32,12 +32,15 @@ class ClocResult {
       languages.add(LanguageResult.fromJson(language, json[language]));
     }
 
+    // sorted into descending code count
+    languages.sort((b, a) => a.code.compareTo(b.code));
+
     return ClocResult(
       totalFiles: json['header']['n_files'],
       totalLines: json['header']['n_lines'],
       totalBlank: json['SUM']['blank'],
       totalComment: json['SUM']['comment'],
-      totalCode: json['SUM']['blank'],
+      totalCode: json['SUM']['code'],
       languages: languages,
       commitHash: json['header']['commit_hash'],
       date: json['header']['date'] != null
@@ -75,14 +78,14 @@ class ClocResult {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is ClocResult &&
-              runtimeType == other.runtimeType &&
-              totalFiles == other.totalFiles &&
-              totalLines == other.totalLines &&
-              totalBlank == other.totalBlank &&
-              totalComment == other.totalComment &&
-              totalCode == other.totalCode &&
-              const DeepCollectionEquality().equals(languages, other.languages);
+      other is ClocResult &&
+          runtimeType == other.runtimeType &&
+          totalFiles == other.totalFiles &&
+          totalLines == other.totalLines &&
+          totalBlank == other.totalBlank &&
+          totalComment == other.totalComment &&
+          totalCode == other.totalCode &&
+          const DeepCollectionEquality().equals(languages, other.languages);
 
   @override
   int get hashCode =>
