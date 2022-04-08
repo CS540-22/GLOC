@@ -32,11 +32,8 @@ class LangIcon {
         RgbColor color = RgbColor.fromHex(colorStrings[i]);
         colorPalette.add(color);
       } else {
-        // colorPalette.add(colorPalette[i - 1].rotateHue(30));
-        // colorPalette.add(ColorPalette.random(1)[0]);
-
         var hslColor = HSLColor.fromColor(colorPalette[i - 1]);
-        var newLightness = min(hslColor.lightness + .3, 1.0);
+        var newLightness = min(hslColor.lightness + .15, 1.0);
         colorPalette.add(hslColor.withLightness(newLightness).toColor());
       }
     }

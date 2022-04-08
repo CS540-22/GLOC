@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_palette/flutter_palette.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gloc_ui/utilities.dart';
 import 'models.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -19,6 +20,9 @@ class DetailsPageState extends State<DetailsPage> {
   int touchedIndex = -1;
   late List<LanguageResult> graphLanguages;
   late ColorPalette graphColors;
+  var names = languageImages.keys.toList();
+  var paths = languageImages.values.toList();
+  var colors = languageColors.values.toList();
 
   @override
   void initState() {
@@ -95,12 +99,13 @@ class DetailsPageState extends State<DetailsPage> {
           height: 400,
           child: ListView.builder(
               padding: const EdgeInsets.all(8),
-              itemCount: widget.clocResult.languages.length,
+              itemCount: languageImages.length,
               itemBuilder: (BuildContext context, int index) {
                 return Row(
                   children: [
+                    Text(names[index]),
                     SvgPicture.asset(
-                      widget.clocResult.languages[index].icon.path,
+                      'icons/' + paths[index],
                       width: 100,
                       height: 100,
                     ),
@@ -109,8 +114,7 @@ class DetailsPageState extends State<DetailsPage> {
                       height: 42.0,
                       child: DecoratedBox(
                         decoration: BoxDecoration(
-                            color: widget.clocResult.languages[index].icon
-                                .colorPalette[0]),
+                            color: LangIcon(names[index]).colorPalette[0]),
                       ),
                     ),
                     SizedBox(
@@ -118,8 +122,7 @@ class DetailsPageState extends State<DetailsPage> {
                       height: 42.0,
                       child: DecoratedBox(
                         decoration: BoxDecoration(
-                            color: widget.clocResult.languages[index].icon
-                                .colorPalette[1]),
+                            color: LangIcon(names[index]).colorPalette[1]),
                       ),
                     ),
                     SizedBox(
@@ -127,12 +130,48 @@ class DetailsPageState extends State<DetailsPage> {
                       height: 42.0,
                       child: DecoratedBox(
                         decoration: BoxDecoration(
-                            color: widget.clocResult.languages[index].icon
-                                .colorPalette[2]),
+                            color: LangIcon(names[index]).colorPalette[2]),
                       ),
                     ),
                   ],
                 );
+                // return Row(
+                //   children: [
+                //     Text(widget.clocResult.languages[index].name),
+                //     SvgPicture.asset(
+                //       widget.clocResult.languages[index].icon.path,
+                //       width: 100,
+                //       height: 100,
+                //     ),
+                //     SizedBox(
+                //       width: 42.0,
+                //       height: 42.0,
+                //       child: DecoratedBox(
+                //         decoration: BoxDecoration(
+                //             color: widget.clocResult.languages[index].icon
+                //                 .colorPalette[0]),
+                //       ),
+                //     ),
+                //     SizedBox(
+                //       width: 42.0,
+                //       height: 42.0,
+                //       child: DecoratedBox(
+                //         decoration: BoxDecoration(
+                //             color: widget.clocResult.languages[index].icon
+                //                 .colorPalette[1]),
+                //       ),
+                //     ),
+                //     SizedBox(
+                //       width: 42.0,
+                //       height: 42.0,
+                //       child: DecoratedBox(
+                //         decoration: BoxDecoration(
+                //             color: widget.clocResult.languages[index].icon
+                //                 .colorPalette[2]),
+                //       ),
+                //     ),
+                //   ],
+                // );
               }),
         )
       ],
