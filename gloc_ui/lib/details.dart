@@ -95,51 +95,22 @@ class DetailsPageState extends State<DetailsPage> {
                 sections: showingSections()),
           ),
         ),
+        ElevatedButton(
+            onPressed: () {
+              downloadResult(widget.clocResult);
+            },
+            child: const Text("Download Results")),
         SizedBox(
-          height: 400,
+          height: 350,
           child: ListView.builder(
               padding: const EdgeInsets.all(8),
-              itemCount: languageImages.length,
+              itemCount: widget.clocResult.languages.length,
               itemBuilder: (BuildContext context, int index) {
-                return Row(
-                  children: [
-                    Text(names[index]),
-                    SvgPicture.asset(
-                      'icons/' + paths[index],
-                      width: 100,
-                      height: 100,
-                    ),
-                    SizedBox(
-                      width: 42.0,
-                      height: 42.0,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                            color: LangIcon(names[index]).colorPalette[0]),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 42.0,
-                      height: 42.0,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                            color: LangIcon(names[index]).colorPalette[1]),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 42.0,
-                      height: 42.0,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                            color: LangIcon(names[index]).colorPalette[2]),
-                      ),
-                    ),
-                  ],
-                );
                 // return Row(
                 //   children: [
-                //     Text(widget.clocResult.languages[index].name),
+                //     Text(names[index]),
                 //     SvgPicture.asset(
-                //       widget.clocResult.languages[index].icon.path,
+                //       'icons/' + paths[index],
                 //       width: 100,
                 //       height: 100,
                 //     ),
@@ -148,8 +119,7 @@ class DetailsPageState extends State<DetailsPage> {
                 //       height: 42.0,
                 //       child: DecoratedBox(
                 //         decoration: BoxDecoration(
-                //             color: widget.clocResult.languages[index].icon
-                //                 .colorPalette[0]),
+                //             color: LangIcon(names[index]).colorPalette[0]),
                 //       ),
                 //     ),
                 //     SizedBox(
@@ -157,8 +127,7 @@ class DetailsPageState extends State<DetailsPage> {
                 //       height: 42.0,
                 //       child: DecoratedBox(
                 //         decoration: BoxDecoration(
-                //             color: widget.clocResult.languages[index].icon
-                //                 .colorPalette[1]),
+                //             color: LangIcon(names[index]).colorPalette[1]),
                 //       ),
                 //     ),
                 //     SizedBox(
@@ -166,12 +135,48 @@ class DetailsPageState extends State<DetailsPage> {
                 //       height: 42.0,
                 //       child: DecoratedBox(
                 //         decoration: BoxDecoration(
-                //             color: widget.clocResult.languages[index].icon
-                //                 .colorPalette[2]),
+                //             color: LangIcon(names[index]).colorPalette[2]),
                 //       ),
                 //     ),
                 //   ],
                 // );
+                return Row(
+                  children: [
+                    Text(widget.clocResult.languages[index].name),
+                    SvgPicture.asset(
+                      widget.clocResult.languages[index].icon.path,
+                      width: 100,
+                      height: 100,
+                    ),
+                    SizedBox(
+                      width: 42.0,
+                      height: 42.0,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                            color: widget.clocResult.languages[index].icon
+                                .colorPalette[0]),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 42.0,
+                      height: 42.0,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                            color: widget.clocResult.languages[index].icon
+                                .colorPalette[1]),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 42.0,
+                      height: 42.0,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                            color: widget.clocResult.languages[index].icon
+                                .colorPalette[2]),
+                      ),
+                    ),
+                  ],
+                );
               }),
         )
       ],

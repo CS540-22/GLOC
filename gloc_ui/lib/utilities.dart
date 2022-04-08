@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'dart:typed_data';
 import 'models.dart';
 import 'package:http/http.dart' as http;
@@ -53,6 +54,14 @@ String? validateGithubURL(String? urlString) {
   if (url.host != 'github.com') return 'Project must be hosted at github.com';
   if (url.hasEmptyPath) return 'Github URL must contain project path';
   return null;
+}
+
+void downloadResult(ClocResult result) {
+  final content = base64Encode(json.encode(result).codeUnits);
+  final anchor = AnchorElement(
+      href: "data:application/octet-stream;charset=utf-16le;base64,$content")
+    ..setAttribute("download", "results.json")
+    ..click();
 }
 
 Map<String, String> languageImages = {
