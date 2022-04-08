@@ -1,3 +1,4 @@
 from .app import app
+import os
 
-app.config.from_pyfile('config.py')
+app.config.from_envvar(os.environ.get("SECRET_KEY"))

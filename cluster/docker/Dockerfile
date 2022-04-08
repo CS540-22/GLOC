@@ -14,4 +14,8 @@ EXPOSE 5000
 
 RUN chmod +x ./app/cloc.sh
 
+ARG secret_key
+
+ENV SECRET_KEY=$secret_key
+
 CMD ["sh", "./app/cloc.sh"]
