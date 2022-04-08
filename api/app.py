@@ -3,8 +3,10 @@ from flask_executor import Executor
 from git import Repo
 from wtforms import Form, StringField, IntegerField, validators
 import json
+import shlex
 import shutil
 import subprocess
+
 
 app = Flask(__name__)
 executor = Executor(app)
@@ -69,7 +71,7 @@ def execute_cloc(job_hash, runner_type, **kwargs):
     history = []
     if runner_type == "single":
         result = subprocess.run(
-            args=["cloc", "-json", path], capture_output=True, text=True
+            args=["cloc", "-json", shlex.quote(path)], capture_output=True, text=True
         ).stdout
         result = json.loads(result)
         history.append(result)
@@ -85,7 +87,7 @@ def execute_cloc(job_hash, runner_type, **kwargs):
         for commit in reversed(commits):
             repo.git.checkout(commit)
             result = subprocess.run(
-                args=["cloc", "-json", path], capture_output=True, text=True
+                args=["cloc", "-json", shlex.quote(path)], capture_output=True, text=True
             ).stdout
             result = json.loads(result)
             result['header']['commit_hash'] = commit.hexsha
