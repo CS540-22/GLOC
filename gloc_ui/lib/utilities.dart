@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:html';
 import 'dart:typed_data';
 import 'models.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 Future<ClocResult> sendClocRequest(ClocRequest request) async {
-  var response = await http.get(request.generateRequestURL());
+  var response = await get(request.generateRequestURL());
   if (response.statusCode == 200 && response.body.isNotEmpty) {
     return ClocResult.fromJson(jsonDecode(response.body));
   } else {
@@ -14,13 +14,24 @@ Future<ClocResult> sendClocRequest(ClocRequest request) async {
 }
 
 Future<List<ClocResult>> sendClocHistoryRequest(ClocRequest request) async {
-  var response = await http.get(request.generateRequestURL());
+  var response = await get(request.generateRequestURL());
   if (response.statusCode == 200 && response.body.isNotEmpty) {
     return (json.decode(response.body) as List)
         .map((i) => ClocResult.fromJson(i))
         .toList();
   } else {
     throw Exception('Failed Cloc History Request');
+  }
+}
+
+Future<String> sendRequest(ClocRequest request) async {
+  var response = await get(
+    Uri.parse('http://100.118.51.34/status.json'),
+  );
+  if (response.statusCode == 200 && response.body.isNotEmpty) {
+    return response.body;
+  } else {
+    throw Exception('Failed Cloc Request');
   }
 }
 

@@ -15,8 +15,8 @@ class ClocRequest {
     final queryParameters = {
       'giturl': '$giturl',
     };
-
-    return Uri.https('gloc.homelab.benlg.dev', 'gloc', queryParameters);
+    return Uri.parse('http://127.0.0.1:5000/');
+    // return Uri.https('gloc.homelab.benlg.dev', 'gloc', queryParameters);
   }
 }
 
@@ -195,4 +195,58 @@ class ClocResult {
       totalComment.hashCode ^
       totalCode.hashCode ^
       languages.hashCode;
+}
+
+enum JobStatus { started, cloning, counting, finished }
+
+class ClocJob {
+  int? jobHash;
+  JobStatus? status;
+  int? currentCommit;
+  int? lastCommit;
+  ClocResult? result;
+
+  ClocJob({
+    this.jobHash,
+    this.status,
+    this.currentCommit,
+    this.lastCommit,
+    this.result,
+  });
+
+  factory ClocJob.fromJson(Map<String, dynamic> json) {
+    ClocJob job = ClocJob(jobHash: json['hash']);
+
+    if (json['status'] == "STARTED") {
+      job.status = JobStatus.started;
+    } else if (json['status'] == "RUNNING") {
+      //cloning check
+      //counting check
+      job.status = JobStatus.counting;
+    } else if (json['status'] == "FINISHED") {
+      job.status = JobStatus.finished;
+      job.result = ClocResult.fromJson(json['result']);
+    } else {
+      throw Exception('Bad ApiResult json');
+    }
+    return job;
+  }
+
+  String createStatusMessage() {
+    switch (status) {
+      case JobStatus.started:
+        return "Started";
+      case JobStatus.cloning:
+        return "Cloning";
+      case JobStatus.counting:
+        if (currentCommit != null && lastCommit != null) {
+          return "Counting $currentCommit/$lastCommit Commits";
+        }
+        return "Counting";
+      case JobStatus.finished:
+        return "Finished";
+      default:
+        return "";
+    }
+  }
 }
