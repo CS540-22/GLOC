@@ -71,7 +71,7 @@ def execute_cloc(job_hash, runner_type, **kwargs):
     history = []
     if runner_type == "single":
         result = subprocess.run(
-            args=["cloc", "-json", shlex.quote(path)], capture_output=True, text=True
+            args=["cloc", "-json", shlex.quote(path)], capture_output=True, text=True, shell=False
         ).stdout
         result = json.loads(result)
         history.append(result)
@@ -87,7 +87,7 @@ def execute_cloc(job_hash, runner_type, **kwargs):
         for commit in reversed(commits):
             repo.git.checkout(commit)
             result = subprocess.run(
-                args=["cloc", "-json", shlex.quote(path)], capture_output=True, text=True
+                args=["cloc", "-json", shlex.quote(path)], capture_output=True, text=True, shell=False
             ).stdout
             result = json.loads(result)
             result['header']['commit_hash'] = commit.hexsha
