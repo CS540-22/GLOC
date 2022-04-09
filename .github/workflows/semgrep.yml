@@ -41,8 +41,7 @@ jobs:
 #           publishDeployment: ${{ secrets.SEMGREP_DEPLOYMENT_ID }}
           config: >-
             p/ci
-            p/flask
-            p/python
+            p/owasp-top-ten
           generateSarif: "1"
 
       # Upload SARIF file generated in previous step
