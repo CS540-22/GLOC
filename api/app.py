@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_executor import Executor
 from git import Repo
 from wtforms import Form, StringField, IntegerField, validators
+from dramatiq.brokers.redis import RedisBroker
+import dramatiq
 import json
 import shlex
 import shutil
@@ -64,6 +66,7 @@ def clone(url, job_hash, **kwargs):
 """
 
 
+@dramatiq.actor(max_retries=3)
 def execute_cloc(job_hash, runner_type, **kwargs):
     path = f"/tmp/cloc-api-{job_hash}"
 
@@ -149,4 +152,7 @@ def history():
 
 
 if __name__ == '__main__':
+    redis_broker = RedisBroker(
+        host="redis-master.redis.svc.cluster.local", port=6379, db=0)
+    dramatiq.set_broker(redis_broker)
     app.run(host='127.0.0.1')

@@ -32,7 +32,7 @@ spec:
         - name: regcred
       containers:
         - name: cloc-api
-          image: bgreenb11/flask-cloc-api:arm
+          image: bgreenb11/flask-cloc-api:redis
           resources:
             limits:
               memory: '128Mi'

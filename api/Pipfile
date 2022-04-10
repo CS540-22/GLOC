@@ -12,6 +12,7 @@ flask-executor = "*"
 flask-wtf = "*"
 gitpython = "*"
 gunicorn = "*"
+dramatiq = {extras = ["redis", "watch"], version = "*"}
 
 [requires]
 python_version = "3.9"
