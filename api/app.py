@@ -75,6 +75,7 @@ def clone(url, job_hash, **kwargs):
 """
 
 
+@dramatiq.actor(max_retries=3)
 def execute_cloc(job_hash, runner_type, **kwargs):
     path = f"/tmp/cloc-api-{job_hash}"
     job = get_current_job()
