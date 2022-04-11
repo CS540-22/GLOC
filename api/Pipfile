@@ -8,16 +8,11 @@ python-dotenv = "*"
 
 [packages]
 flask = "*"
-flask-executor = "*"
 flask-wtf = "*"
 gitpython = "*"
 gunicorn = "*"
-<<<<<<< HEAD
 redis = "*"
 rq = "*"
-=======
-dramatiq = {extras = ["redis", "watch"], version = "*"}
->>>>>>> 240141c932543637c03e90a95d52630d33e99198
 
 [requires]
 python_version = "3.9"
