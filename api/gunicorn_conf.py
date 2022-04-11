@@ -1,4 +1,6 @@
-bind = "0.0.0.0:5000"
+import os
+
+bind = f"{os.environ.get('FLASK_HOST')}:5000"
 loglevel = "info"
 errorlog = "-"
 accesslog = "-"
