@@ -3,29 +3,59 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:gloc_ui/stream_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'details.dart';
 import 'models.dart';
 import 'results.dart';
 import 'utilities.dart';
 
 // ClocRequest('https://github.com/attendio/attendio.git')
-void main() => runApp(const MyApp());
+void main() {
+  GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   static const String _title = 'GLOC';
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _title,
-      home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
-        body: const MyCustomForm(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp.router(
+        routeInformationParser: _router.routeInformationParser,
+        routerDelegate: _router.routerDelegate,
+        title: _title,
+      );
+
+  final _router = GoRouter(
+    routes: <GoRoute>[
+      GoRoute(
+          name: 'home',
+          path: '/',
+          builder: (context, state) => MyCustomForm(key: state.pageKey),
+          routes: [
+            GoRoute(
+                name: 'loading',
+                path: 'loading',
+                builder: (context, state) => WaitingScreen(
+                      key: state.pageKey,
+                      request: state.extra! as ClocRequest,
+                    )),
+            GoRoute(
+                name: 'details',
+                path: 'details',
+                builder: (context, state) => DetailsPage(
+                    key: state.pageKey,
+                    clocResult: state.extra! as ClocResult)),
+          ]),
+    ],
+    initialLocation: '/',
+    errorPageBuilder: (context, state) => MaterialPage(
+        key: state.pageKey,
+        child: Scaffold(
+          body: Center(child: Text(state.error.toString())),
+        )),
+  );
 }
 
 class MyCustomForm extends StatefulWidget {
@@ -62,7 +92,8 @@ class MyCustomFormState extends State<MyCustomForm> {
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
-    return Form(
+    return Scaffold(
+        body: Form(
       key: _formKey,
       child: Column(
         children: <Widget>[
@@ -85,24 +116,11 @@ class MyCustomFormState extends State<MyCustomForm> {
               //     '{"header":{"cloc_url":"github.com/AlDanial/cloc","cloc_version":"1.90","elapsed_seconds":0.327791929244995,"n_files":58,"n_lines":3042,"files_per_second":176.941513275179,"lines_per_second":9280.27729970855},"Dart":{"nFiles":26,"blank":190,"comment":94,"code":1668},"XML":{"nFiles":13,"blank":2,"comment":37,"code":319},"JSON":{"nFiles":5,"blank":0,"comment":0,"code":236},"YAML":{"nFiles":2,"blank":18,"comment":51,"code":103},"Gradle":{"nFiles":3,"blank":18,"comment":3,"code":88},"HTML":{"nFiles":1,"blank":13,"comment":17,"code":53},"Markdown":{"nFiles":4,"blank":25,"comment":0,"code":44},"CSS":{"nFiles":1,"blank":5,"comment":0,"code":38},"Swift":{"nFiles":1,"blank":1,"comment":0,"code":12},"Kotlin":{"nFiles":1,"blank":2,"comment":0,"code":4},"C/C++Header":{"nFiles":1,"blank":0,"comment":0,"code":1},"SUM":{"blank":274,"comment":202,"code":2566,"nFiles":58}}';
               // ClocResult expectedResult =
               //     ClocResult.fromJson(jsonDecode(expectedJsonString));
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => DetailsPage(
-              //       clocResult: expectedResult,
-              //     ),
-              //   ),
-              // );
+              // context.goNamed('details', extra: expectedResult);
 
               // ************Stream Page***************
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WaitingScreen(
-                    request: ClocRequest(urlController.text),
-                  ),
-                ),
-              );
+              context.goNamed('loading',
+                  extra: ClocRequest(urlController.text));
 
               // ************Results Page***************
               // // Validate returns true if the form is valid, or false otherwise.
@@ -140,20 +158,13 @@ class MyCustomFormState extends State<MyCustomForm> {
                   await controller1.pickFiles(mime: ['application/json']);
               var bytes = await controller1.getFileData(files.first);
               var result = getResultsFromFile(bytes);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailsPage(
-                    clocResult: result![0],
-                  ),
-                ),
-              );
+              context.goNamed('details', extra: result![0]);
             },
             child: const Text('Pick file'),
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget buildZone1(BuildContext context) => Builder(
@@ -179,14 +190,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             });
             final bytes = await controller1.getFileData(ev);
             var result = getResultsFromFile(bytes);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DetailsPage(
-                  clocResult: result![0],
-                ),
-              ),
-            );
+            context.goNamed('details', extra: result![0]);
             // print(result);
           },
           onDropMultiple: (ev) async {

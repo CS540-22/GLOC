@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gloc_ui/details.dart';
 import 'package:gloc_ui/utilities.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart';
 import 'dart:async';
 import 'dart:math';
@@ -80,12 +81,8 @@ class WaitingScreenState extends State<WaitingScreen> {
         if (currentJob.status == JobStatus.finished &&
             currentJob.result != null) {
           jobSubscription.cancel();
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailsPage(clocResult: currentJob.result!),
-            ),
-          );
+          Router.neglect(context,
+              () => context.goNamed('details', extra: currentJob.result!));
         }
         _bgColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
       });
