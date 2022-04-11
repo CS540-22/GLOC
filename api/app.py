@@ -1,15 +1,20 @@
 from flask import Flask, request, jsonify
-from flask_executor import Executor
 from git import Repo
 from wtforms import Form, StringField, IntegerField, validators
+from rq import Queue, get_current_job
+from rq.job import Job, NoSuchJobError
+import redis
 import json
+import os
 import shlex
 import shutil
 import subprocess
 
 
 app = Flask(__name__)
-executor = Executor(app)
+conn = redis.Redis(host=os.environ.get("REDIS_HOST"), port=6379, db=0,
+                   password=os.environ.get("REDIS_AUTH"))
+q = Queue(connection=conn)
 
 
 class ResultsGetForm(Form):
@@ -25,23 +30,28 @@ class DataForm(Form):
 
 
 """
-    Method to clone the provided repo and start the executor to run the cloc job before returning the STARTED status and the hash of the current job 
+    Method to clone the provided repo and start the RQ Worker to run the cloc job before returning the 'started' status and the hash of the current job 
 """
 
 
 def start_runner(form, runner_type):
     url, job_hash = form.url.data, hash(form)
-    clone(url, job_hash, runner_type=runner_type)
 
     if runner_type == "single":
-        executor.submit_stored(
-            f'cloc_results_{job_hash}', execute_cloc, job_hash, runner_type
+        job = q.enqueue_call(
+            func="app.execute_cloc",
+            args=(url, job_hash, runner_type,),
         )
     elif runner_type == "history":
-        executor.submit_stored(
-            f'cloc_results_{job_hash}', execute_cloc, job_hash, runner_type, limit=form.limit.data, step=form.step.data
+
+        job = q.enqueue_call(
+            func="app.execute_cloc",
+            args=(url, job_hash, runner_type,),
+            kwargs={'limit': form.limit.data, 'step': form.step.data},
         )
-    return jsonify({'status': 'STARTED', 'hash': job_hash})
+
+    print(job.get_id())
+    return jsonify({'status': 'started', 'hash': job.get_id()})
 
 
 """
@@ -60,12 +70,16 @@ def clone(url, job_hash, **kwargs):
 
 """
     Executes the cloc command based on the provided input
-    Should only be run by Executor to prevent Flask from hanging
+    Should only be run by an RQ Worker to prevent Flask from hanging
 """
 
 
-def execute_cloc(job_hash, runner_type, **kwargs):
+def execute_cloc(url, job_hash, runner_type, **kwargs):
     path = f"/tmp/cloc-api-{job_hash}"
+    job = get_current_job()
+
+    clone(url, job_hash, runner_type=runner_type)
+    job.set_status("cloning")
 
     # Run Cloc
     history = []
@@ -84,7 +98,7 @@ def execute_cloc(job_hash, runner_type, **kwargs):
         commits = list(repo.iter_commits(
             repo.head, max_count=limit, first_parent=True))[::step]
 
-        for commit in reversed(commits):
+        for index, commit in enumerate(reversed(commits)):
             repo.git.checkout(commit)
             result = subprocess.run(
                 args=["cloc", "-json", shlex.quote(path)], capture_output=True, text=True, shell=False
@@ -93,6 +107,7 @@ def execute_cloc(job_hash, runner_type, **kwargs):
             result['header']['commit_hash'] = commit.hexsha
             result['header']['date'] = commit.committed_date
             history.append(result)
+            job.set_status(f"{index+1}/{limit}")
 
     # Delete directory
     shutil.rmtree(path)
@@ -107,14 +122,18 @@ def execute_cloc(job_hash, runner_type, **kwargs):
 
 
 def get_results(job_hash):
-    if not executor.futures.done(f'cloc_results_{job_hash}'):
-        return jsonify({'status': executor.futures._state(f'cloc_results_{job_hash}')})
+    try:
+        job = Job.fetch(str(job_hash), connection=conn)
+    except NoSuchJobError:
+        return f"Job-{job_hash} Not Found", 500
 
-    future = executor.futures.pop(f'cloc_results_{job_hash}')
-    return jsonify({
-        'status': 'FINISHED',
-        'results': future.result(),
-    })
+    if job.is_finished:
+        return jsonify({
+            'status': 'finished',
+            'results': job.result,
+        }), 200
+
+    return jsonify({'status': job.get_status()}), 202
 
 
 """
@@ -149,4 +168,4 @@ def history():
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1')
+    app.run(host=os.environ.get("FLASK_HOST"))

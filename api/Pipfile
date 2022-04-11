@@ -8,10 +8,11 @@ python-dotenv = "*"
 
 [packages]
 flask = "*"
-flask-executor = "*"
 flask-wtf = "*"
 gitpython = "*"
 gunicorn = "*"
+redis = "*"
+rq = "*"
 
 [requires]
 python_version = "3.9"

@@ -18,4 +18,16 @@ ARG secret_key
 
 ENV SECRET_KEY=$secret_key
 
+ARG redis_auth
+
+ENV REDIS_AUTH=$redis_auth
+
+ARG redis_host
+
+ENV REDIS_HOST=$redis_host
+
+ARG flask_host
+
+ENV FLASK_HOST=$flask_host
+
 CMD ["sh", "./app/cloc.sh"]
