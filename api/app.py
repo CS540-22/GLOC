@@ -30,29 +30,28 @@ class DataForm(Form):
 
 
 """
-    Method to clone the provided repo and start the RQ Worker to run the cloc job before returning the STARTED status and the hash of the current job 
+    Method to clone the provided repo and start the RQ Worker to run the cloc job before returning the 'started' status and the hash of the current job 
 """
 
 
 def start_runner(form, runner_type):
     url, job_hash = form.url.data, hash(form)
-    clone(url, job_hash, runner_type=runner_type)
 
     if runner_type == "single":
         job = q.enqueue_call(
             func="app.execute_cloc",
-            args=(job_hash, runner_type,),
+            args=(url, job_hash, runner_type,),
         )
     elif runner_type == "history":
 
         job = q.enqueue_call(
             func="app.execute_cloc",
-            args=(job_hash, runner_type,),
+            args=(url, job_hash, runner_type,),
             kwargs={'limit': form.limit.data, 'step': form.step.data},
         )
 
     print(job.get_id())
-    return jsonify({'status': 'STARTED', 'hash': job.get_id()})
+    return jsonify({'status': 'started', 'hash': job.get_id()})
 
 
 """
@@ -75,9 +74,12 @@ def clone(url, job_hash, **kwargs):
 """
 
 
-def execute_cloc(job_hash, runner_type, **kwargs):
+def execute_cloc(url, job_hash, runner_type, **kwargs):
     path = f"/tmp/cloc-api-{job_hash}"
     job = get_current_job()
+
+    clone(url, job_hash, runner_type=runner_type)
+    job.set_status("cloning")
 
     # Run Cloc
     history = []
@@ -105,7 +107,7 @@ def execute_cloc(job_hash, runner_type, **kwargs):
             result['header']['commit_hash'] = commit.hexsha
             result['header']['date'] = commit.committed_date
             history.append(result)
-            job.set_status(index+1)
+            job.set_status(f"{index+1}/{limit}")
 
     # Delete directory
     shutil.rmtree(path)
@@ -127,7 +129,7 @@ def get_results(job_hash):
 
     if job.is_finished:
         return jsonify({
-            'status': 'FINISHED',
+            'status': 'finished',
             'results': job.result,
         }), 200
 
