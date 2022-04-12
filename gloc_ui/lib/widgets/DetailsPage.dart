@@ -12,18 +12,22 @@ class DetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        //TODO use repo name and URL once added to the result data
-        _RepoTitle(url: "github.com/username/MyExampleRepository"),
-        SizedBox(height: _cardSpacing),
-        _CodeCount(
-            totalLines: clocResult.totalLines,
-            totalCode: clocResult.totalCode,
-            totalBlank: clocResult.totalBlank,
-            totalComment: clocResult.totalComment),
-      ],
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+
+          children: [
+            //TODO use repo name and URL once added to the result data
+            _RepoTitle(url: "github.com/username/MyExampleRepository"),
+            SizedBox(height: _cardSpacing),
+            _CodeCount(
+                totalLines: clocResult.totalLines,
+                totalCode: clocResult.totalCode,
+                totalBlank: clocResult.totalBlank,
+                totalComment: clocResult.totalComment),
+          ],
+        ),
     );
   }
 }
