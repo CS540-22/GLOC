@@ -1,10 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:gloc_ui/details.dart';
-import 'package:gloc_ui/utilities.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart';
 import 'dart:async';
 import 'dart:math';
 
@@ -19,10 +17,9 @@ class WaitingScreen extends StatefulWidget {
 }
 
 class WaitingScreenState extends State<WaitingScreen> {
-  ClocJob currentJob = ClocJob();
+  ClocJob currentJob = ClocJob(status: JobStatus.pending);
   late StreamSubscription jobSubscription;
 
-  Color _bgColor = Colors.blueGrey;
   @override
   void initState() {
     jobStreamSetup();
@@ -38,7 +35,7 @@ class WaitingScreenState extends State<WaitingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bgColor,
+      backgroundColor: Colors.blueGrey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('Flutter Stream.periodic Demo'),
@@ -61,30 +58,46 @@ class WaitingScreenState extends State<WaitingScreen> {
     );
   }
 
-  void jobStreamSetup() {
+  void jobStreamSetup() async {
+    // send initial cloc request
+    var response = await widget.request.sendRequest();
+    if (response.statusCode == 200 && response.body.isNotEmpty) {
+      var jsonData = jsonDecode(response.body);
+      currentJob = ClocJob(jobHash: jsonData['hash']);
+      currentJob.updateJobStatus(jsonData);
+    } else {
+      throw Exception('Failed to start job');
+    }
+
+    // create polling stream to periodically check the job status
     Stream jobStream = Stream.periodic(const Duration(seconds: 1), (_) async {
-      var response = await get(widget.request.generateRequestURL());
+      var response = await currentJob.fetchJobStatus();
       if (response.statusCode == 200 && response.body.isNotEmpty) {
-        print(response.body);
-        return ClocJob.fromJson(jsonDecode(response.body));
+        var jsonData = jsonDecode(response.body);
+        currentJob.updateJobStatus(jsonData);
+        return currentJob;
       } else {
-        throw Exception('Failed Cloc Request');
+        throw Exception('Failed to get job status');
       }
     }).asyncMap(
       (value) async => await value,
     );
 
+    // listen for status changes and update state
     jobSubscription = jobStream.listen((event) {
       setState(() {
         currentJob = event;
-
         if (currentJob.status == JobStatus.finished &&
             currentJob.result != null) {
           jobSubscription.cancel();
-          Router.neglect(context,
-              () => context.goNamed('details', extra: currentJob.result!));
+          if (currentJob.result!.length == 1) {
+            Router.neglect(context,
+                () => context.goNamed('details', extra: currentJob.result![0]));
+          } else {
+            Router.neglect(context,
+                () => context.goNamed('history', extra: currentJob.result!));
+          }
         }
-        _bgColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
       });
     });
   }

@@ -6,7 +6,6 @@ import 'package:gloc_ui/stream_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'details.dart';
 import 'models.dart';
-import 'results.dart';
 import 'utilities.dart';
 
 // ClocRequest('https://github.com/attendio/attendio.git')
@@ -120,7 +119,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
               // ************Stream Page***************
               context.goNamed('loading',
-                  extra: ClocRequest(urlController.text));
+                  extra: ClocRequest(urlController.text, RequestType.single));
 
               // ************Results Page***************
               // // Validate returns true if the form is valid, or false otherwise.

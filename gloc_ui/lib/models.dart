@@ -5,18 +5,23 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_palette/flutter_palette.dart';
 import 'package:gloc_ui/utilities.dart';
+import 'package:http/http.dart';
+
+enum RequestType { single, history }
 
 class ClocRequest {
   final Uri giturl;
+  final RequestType type;
 
-  ClocRequest(String url) : giturl = Uri.parse(url);
+  ClocRequest(String url, this.type) : giturl = Uri.parse(url);
 
-  Uri generateRequestURL() {
-    final queryParameters = {
-      'giturl': '$giturl',
-    };
-    return Uri.parse('http://127.0.0.1:5000/');
-    // return Uri.https('gloc.homelab.benlg.dev', 'gloc', queryParameters);
+  Future<Response> sendRequest() async {
+    return await post(
+      Uri.https('gloc.homelab.benlg.dev', type.name),
+      body: <String, String>{
+        'url': '$giturl',
+      },
+    );
   }
 }
 
@@ -197,14 +202,14 @@ class ClocResult {
       languages.hashCode;
 }
 
-enum JobStatus { started, cloning, counting, finished }
+enum JobStatus { pending, started, cloning, counting, finished }
 
 class ClocJob {
-  int? jobHash;
+  String? jobHash;
   JobStatus? status;
   int? currentCommit;
   int? lastCommit;
-  ClocResult? result;
+  List<ClocResult>? result;
 
   ClocJob({
     this.jobHash,
@@ -214,26 +219,38 @@ class ClocJob {
     this.result,
   });
 
-  factory ClocJob.fromJson(Map<String, dynamic> json) {
-    ClocJob job = ClocJob(jobHash: json['hash']);
-
-    if (json['status'] == "STARTED") {
-      job.status = JobStatus.started;
-    } else if (json['status'] == "RUNNING") {
-      //cloning check
-      //counting check
-      job.status = JobStatus.counting;
-    } else if (json['status'] == "FINISHED") {
-      job.status = JobStatus.finished;
-      job.result = ClocResult.fromJson(json['result']);
+  updateJobStatus(Map<String, dynamic> json) {
+    if (json['status'] == "started") {
+      status = JobStatus.started;
+    } else if (json['status'] == "cloning") {
+      status = JobStatus.cloning;
+    } else if (json['status'].toString().contains('/')) {
+      status = JobStatus.counting;
+      var commitNums = json['status'].toString().split('/');
+      currentCommit = int.parse(commitNums[0]);
+      lastCommit = int.parse(commitNums[1]);
+    } else if (json['status'] == "finished") {
+      status = JobStatus.finished;
+      result =
+          (json['results'] as List).map((i) => ClocResult.fromJson(i)).toList();
     } else {
       throw Exception('Bad ApiResult json');
     }
-    return job;
+  }
+
+  Future<Response> fetchJobStatus() async {
+    return await post(
+      Uri.https('gloc.homelab.benlg.dev', 'single'),
+      body: <String, String>{
+        'job_hash': '$jobHash',
+      },
+    );
   }
 
   String createStatusMessage() {
     switch (status) {
+      case JobStatus.pending:
+        return "Pending";
       case JobStatus.started:
         return "Started";
       case JobStatus.cloning:

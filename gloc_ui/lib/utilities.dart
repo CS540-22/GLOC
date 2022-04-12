@@ -4,25 +4,25 @@ import 'dart:typed_data';
 import 'models.dart';
 import 'package:http/http.dart';
 
-Future<ClocResult> sendClocRequest(ClocRequest request) async {
-  var response = await get(request.generateRequestURL());
-  if (response.statusCode == 200 && response.body.isNotEmpty) {
-    return ClocResult.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed Cloc Request');
-  }
-}
+// Future<ClocResult> sendClocRequest(ClocRequest request) async {
+//   var response = await get(request.generateRequestURL());
+//   if (response.statusCode == 200 && response.body.isNotEmpty) {
+//     return ClocResult.fromJson(jsonDecode(response.body));
+//   } else {
+//     throw Exception('Failed Cloc Request');
+//   }
+// }
 
-Future<List<ClocResult>> sendClocHistoryRequest(ClocRequest request) async {
-  var response = await get(request.generateRequestURL());
-  if (response.statusCode == 200 && response.body.isNotEmpty) {
-    return (json.decode(response.body) as List)
-        .map((i) => ClocResult.fromJson(i))
-        .toList();
-  } else {
-    throw Exception('Failed Cloc History Request');
-  }
-}
+// Future<List<ClocResult>> sendClocHistoryRequest(ClocRequest request) async {
+//   var response = await get(request.generateRequestURL());
+//   if (response.statusCode == 200 && response.body.isNotEmpty) {
+//     return (json.decode(response.body) as List)
+//         .map((i) => ClocResult.fromJson(i))
+//         .toList();
+//   } else {
+//     throw Exception('Failed Cloc History Request');
+//   }
+// }
 
 Future<String> sendRequest(ClocRequest request) async {
   var response = await get(
@@ -36,23 +36,12 @@ Future<String> sendRequest(ClocRequest request) async {
 }
 
 List<ClocResult>? getResultsFromFile(Uint8List bytes) {
-  // Attempt to read bytes as single cloc result
   try {
-    var result = [ClocResult.fromBytes(bytes)];
-    // print("single");
-    return result;
+    return (json.decode(String.fromCharCodes(bytes)) as List)
+        .map((i) => ClocResult.fromJson(i))
+        .toList();
   } catch (e) {
-    // Attempt to read bytes as cloc history request
-    try {
-      var result = (json.decode(String.fromCharCodes(bytes)) as List)
-          .map((i) => ClocResult.fromJson(i))
-          .toList();
-      // print("history");
-      return result;
-    } catch (e) {
-      // print("invalid");
-      return null;
-    }
+    return null;
   }
 }
 
@@ -68,7 +57,7 @@ String? validateGithubURL(String? urlString) {
 }
 
 void downloadResult(ClocResult result) {
-  final content = base64Encode(json.encode(result).codeUnits);
+  final content = base64Encode(json.encode([result]).codeUnits);
   final anchor = AnchorElement(
       href: "data:application/octet-stream;charset=utf-16le;base64,$content")
     ..setAttribute("download", "results.json")
