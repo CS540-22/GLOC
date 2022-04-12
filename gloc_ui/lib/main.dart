@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 name: 'loading',
                 path: 'loading',
+                redirect: (state) => (state.extra == null) ? '/' : null,
                 builder: (context, state) => LoadingPage(
                       key: state.pageKey,
                       request: state.extra! as ClocRequest,
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 name: 'details',
                 path: 'details',
+                redirect: (state) => (state.extra == null) ? '/' : null,
                 builder: (context, state) => DetailsPage(
                     key: state.pageKey,
                     clocResult: state.extra! as ClocResult)),
