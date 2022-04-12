@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gloc_ui/widgets/DetailsPage.dart';
+import 'package:gloc_ui/widgets/HistoryPage.dart';
 import 'package:gloc_ui/widgets/HomePage.dart';
 import 'package:gloc_ui/widgets/LoadingPage.dart';
 import 'package:go_router/go_router.dart';
@@ -42,6 +43,13 @@ class MyApp extends StatelessWidget {
                 builder: (context, state) => DetailsPage(
                     key: state.pageKey,
                     clocResult: state.extra! as ClocResult)),
+            GoRoute(
+                name: 'history',
+                path: 'history',
+                redirect: (state) => (state.extra == null) ? '/' : null,
+                builder: (context, state) => HistoryPage(
+                    key: state.pageKey,
+                    historyResult: state.extra! as List<ClocResult>)),
           ]),
     ],
     errorPageBuilder: (context, state) => MaterialPage(

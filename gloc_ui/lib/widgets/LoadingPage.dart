@@ -76,7 +76,8 @@ class LoadingPageState extends State<LoadingPage> {
             Router.neglect(context,
                 () => context.goNamed('details', extra: currentJob.result![0]));
           } else {
-            // history page
+            Router.neglect(context,
+                () => context.goNamed('history', extra: currentJob.result!));
           }
         }
       });
