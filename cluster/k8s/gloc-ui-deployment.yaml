@@ -1,67 +1,65 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cloc-api-service
-  namespace: gloc
+  name: gloc-ui-service
+  namespace: gloc-ui
 spec:
   selector:
-    app: cloc-api
+    app: gloc-ui
   ports:
     - name: http
       port: 80
-      targetPort: 5000
+      targetPort: 8080
       protocol: TCP
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloc-api
-  namespace: gloc
+  name: gloc-ui
+  namespace: gloc-ui
 spec:
   selector:
     matchLabels:
-      app: cloc-api
+      app: gloc-ui
   replicas: 3
   template:
     metadata:
       labels:
-        app: cloc-api
+        app: gloc-ui
     spec:
-      imagePullSecrets:
-        - name: regcred
       containers:
-        - name: cloc-api
-          image: bgreenb11/flask-cloc-api:redis
+        - name: gloc-ui
+          image: bgreenb11/gloc-ui:arm
           resources:
             limits:
               memory: '128Mi'
               cpu: '500m'
           ports:
-            - containerPort: 5000
+            - containerPort: 8080
           imagePullPolicy: Always
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gloc
-  namespace: gloc
+  name: gloc-ui
+  namespace: gloc-ui
   annotations:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: cloudflare
 spec:
   tls:
     - hosts:
-        - gloc-api.homelab.benlg.dev
-      secretName: gloc-tls
+        - gloc.homelab.benlg.dev
+      secretName: gloc-ui-tls
   rules:
-    - host: gloc-api.homelab.benlg.dev
+    - host: gloc.homelab.benlg.dev
       http:
         paths:
           - backend:
               service:
-                name: cloc-api-service
+                name: gloc-ui-service
                 port:
                   name: http
             path: /
