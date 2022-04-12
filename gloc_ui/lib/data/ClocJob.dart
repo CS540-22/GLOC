@@ -45,7 +45,7 @@ class ClocJob {
 
   Future<Response> fetchJobStatus() async {
     return await post(
-      Uri.https('gloc.homelab.benlg.dev', type!.name),
+      Uri.https(String.fromEnvironment('API_URL'), type!.name),
       body: <String, String>{
         'job_hash': '$jobHash',
       },
