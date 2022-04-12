@@ -30,7 +30,7 @@ class DataForm(Form):
 
 
 """
-    Method to clone the provided repo and start the RQ Worker to run the cloc job before returning the 'started' status and the hash of the current job 
+    Method to clone the provided repo and start the RQ Worker to run the cloc job before returning the 'started' status and the hash of the current job
 """
 
 
@@ -133,7 +133,7 @@ def get_results(job_hash):
             'results': job.result,
         }), 200
 
-    return jsonify({'status': job.get_status()}), 202
+    return jsonify({'status': job.get_status()}), 200
 
 
 """
@@ -141,13 +141,14 @@ def get_results(job_hash):
 """
 
 
-@ app.route('/single', methods=["GET", "POST"])
+@ app.route('/single', methods=["POST"])
 def single():
 
-    if request.method == "POST" and (form := DataForm(request.form)).validate():
-        return start_runner(form=form, runner_type='single')
-    elif request.method == "GET" and (form := ResultsGetForm(request.form)).validate():
-        return get_results(form.job_hash.data)
+    if request.method == "POST":
+        if (form := DataForm(request.form)).validate():
+            return start_runner(form=form, runner_type='single')
+        elif (form := ResultsGetForm(request.form)).validate():
+            return get_results(form.job_hash.data)
 
     return "Bad Request\n", 400
 
@@ -157,12 +158,13 @@ def single():
 """
 
 
-@ app.route('/history', methods=["GET", "POST"])
+@ app.route('/history', methods=["POST"])
 def history():
-    if request.method == "POST" and (form := DataForm(request.form)).validate():
-        return start_runner(form=form, runner_type='history')
-    elif request.method == "GET" and (form := ResultsGetForm(request.form)).validate():
-        return get_results(form.job_hash.data)
+    if request.method == "POST":
+        if (form := DataForm(request.form)).validate():
+            return start_runner(form=form, runner_type='history')
+        elif (form := ResultsGetForm(request.form)).validate():
+            return get_results(form.job_hash.data)
 
     return "Bad Request\n", 400
 
