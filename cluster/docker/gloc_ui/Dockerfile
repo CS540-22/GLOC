@@ -23,4 +23,3 @@ RUN flutter build web
 FROM --platform=aarch64 nginx:stable-alpine
 # FROM nginx:stable-alpine
 COPY --from=build-env /app/build/web /usr/share/nginx/html
-EXPOSE 8080
