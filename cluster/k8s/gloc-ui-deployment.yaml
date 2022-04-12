@@ -9,7 +9,7 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: 8080
+      targetPort: 80
       protocol: TCP
 
 ---
@@ -22,7 +22,7 @@ spec:
   selector:
     matchLabels:
       app: gloc-ui
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -36,7 +36,7 @@ spec:
               memory: '128Mi'
               cpu: '500m'
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           imagePullPolicy: Always
 
 ---
