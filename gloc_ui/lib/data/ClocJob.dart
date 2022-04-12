@@ -1,3 +1,4 @@
+import 'package:gloc_ui/data/ClocRequest.dart';
 import 'package:gloc_ui/data/ClocResult.dart';
 import 'package:http/http.dart';
 
@@ -9,6 +10,8 @@ class ClocJob {
   int? currentCommit;
   int? lastCommit;
   List<ClocResult>? result;
+  Uri? giturl;
+  RequestType? type;
 
   ClocJob({
     this.jobHash,
@@ -16,6 +19,8 @@ class ClocJob {
     this.currentCommit,
     this.lastCommit,
     this.result,
+    this.giturl,
+    this.type,
   });
 
   updateJobStatus(Map<String, dynamic> json) {
@@ -30,8 +35,9 @@ class ClocJob {
       lastCommit = int.parse(commitNums[1]);
     } else if (json['status'] == "finished") {
       status = JobStatus.finished;
-      result =
-          (json['results'] as List).map((i) => ClocResult.fromJson(i)).toList();
+      result = (json['results'] as List)
+          .map((i) => ClocResult.fromJson(i, giturl: giturl))
+          .toList();
     } else {
       throw Exception('Bad ApiResult json');
     }
@@ -39,7 +45,7 @@ class ClocJob {
 
   Future<Response> fetchJobStatus() async {
     return await post(
-      Uri.https('gloc.homelab.benlg.dev', 'single'),
+      Uri.https('gloc.homelab.benlg.dev', type!.name),
       body: <String, String>{
         'job_hash': '$jobHash',
       },
