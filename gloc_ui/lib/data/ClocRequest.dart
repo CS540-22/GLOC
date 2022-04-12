@@ -9,11 +9,15 @@ class ClocRequest {
   ClocRequest(String url, this.type) : giturl = Uri.parse(url);
 
   Future<Response> sendRequest() async {
+    var body = <String, String>{
+      'url': '$giturl',
+    };
+    if (type == RequestType.history) {
+      body['limit'] = '5';
+    }
     return await post(
-      Uri.https('gloc.homelab.benlg.dev', type.name),
-      body: <String, String>{
-        'url': '$giturl',
-      },
+      Uri.https(String.fromEnvironment('API_URL'), type.name),
+      body: body,
     );
   }
 }
