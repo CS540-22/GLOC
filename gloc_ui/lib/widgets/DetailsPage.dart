@@ -18,8 +18,7 @@ class DetailsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
 
           children: [
-            //TODO use repo name and URL once added to the result data
-            _RepoTitle(url: "github.com/username/MyExampleRepository"),
+            _RepoTitle(url: clocResult.giturl),
             SizedBox(height: _cardSpacing),
             _CodeCount(
                 totalLines: clocResult.totalLines,
@@ -37,21 +36,18 @@ class _RepoTitle extends StatelessWidget {
     required this.url,
   });
 
-  final String url;
+  final Uri? url;
 
   @override
   Widget build(BuildContext context) {
-    var lastSlashIndex = url.lastIndexOf('/') + 1;
-    if (lastSlashIndex == -1 || lastSlashIndex >= url.length) {
-      lastSlashIndex = 0;
-    }
-
+    final String nameString = url?.pathSegments.last ?? "Your Repository";
+    final String urlString = url?.toString() ?? "Unknown URL";
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(url.substring(lastSlashIndex),
+        Text(nameString,
             style: Theme.of(context).textTheme.displaySmall),
-        Text(url, style: Theme.of(context).textTheme.headlineSmall),
+        Text(urlString, style: Theme.of(context).textTheme.headlineSmall),
       ],
     );
   }
