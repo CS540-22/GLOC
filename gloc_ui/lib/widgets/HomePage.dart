@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
         onPressed: () {
           context.goNamed('loading',
               extra: ClocRequest(
-                  'https://github.com/attendio/attendio', RequestType.single));
+                  'https://github.com/CS540-22/GLOC', RequestType.single));
         },
         child: const Text('Submit'),
       ),
