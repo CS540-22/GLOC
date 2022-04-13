@@ -18,22 +18,22 @@ class DetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-
-          children: [
-            _RepoTitle(url: clocResult.giturl),
-            SizedBox(height: _cardSpacing),
-            _CodeCount(
-                totalLines: clocResult.totalLines,
-                totalCode: clocResult.totalCode,
-                totalBlank: clocResult.totalBlank,
-                totalComment: clocResult.totalComment),
-            _LanguagePieChart(
-              clocResult: clocResult,
-            ),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _RepoTitle(url: clocResult.giturl),
+          SizedBox(height: _cardSpacing),
+          _CodeCount(
+              totalLines: clocResult.totalLines,
+              totalCode: clocResult.totalCode,
+              totalBlank: clocResult.totalBlank,
+              totalComment: clocResult.totalComment),
+          SizedBox(height: _cardSpacing),
+          _LanguagePieChart(
+            clocResult: clocResult,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -52,8 +52,7 @@ class _RepoTitle extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(nameString,
-            style: Theme.of(context).textTheme.displaySmall),
+        Text(nameString, style: Theme.of(context).textTheme.displaySmall),
         Text(urlString, style: Theme.of(context).textTheme.headlineSmall),
       ],
     );
@@ -68,7 +67,7 @@ class _CodeCount extends StatelessWidget {
       required this.totalComment});
 
   final int totalLines, totalCode, totalBlank, totalComment;
-  final double barHeight = 100.0;
+  final double barHeight = 10.0;
 
   Widget _buildBarSection(int count, Color color) {
     return Expanded(
@@ -89,12 +88,14 @@ class _CodeCount extends StatelessWidget {
           '$totalLines lines of code',
           style: Theme.of(context).textTheme.titleSmall,
         ),
-        Row(children: [
-          _buildBarSection(totalCode, Colors.red),
-          _buildBarSection(totalComment, Colors.blue),
-          _buildBarSection(totalBlank, Colors.green),
-        ]),
-        Text('Hello'),
+        ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400),
+          child: Row(children: [
+            _buildBarSection(totalCode, Colors.red),
+            _buildBarSection(totalComment, Colors.blue),
+            _buildBarSection(totalBlank, Colors.green),
+          ]),
+        ),
       ],
     );
   }
