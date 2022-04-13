@@ -1,13 +1,23 @@
+import 'package:http/http.dart';
+
+enum RequestType { single, history }
+
 class ClocRequest {
   final Uri giturl;
+  final RequestType type;
 
-  ClocRequest(String url) : giturl = Uri.parse(url);
+  ClocRequest(String url, this.type) : giturl = Uri.parse(url);
 
-  Uri generateRequestURL() {
-    final queryParameters = {
-      'giturl': '$giturl',
+  Future<Response> sendRequest() async {
+    var body = <String, String>{
+      'url': '$giturl',
     };
-
-    return Uri.https('gloc.homelab.benlg.dev', 'gloc', queryParameters);
+    if (type == RequestType.history) {
+      body['limit'] = '5';
+    }
+    return await post(
+      Uri.https('gloc-api.homelab.benlg.dev', type.name),
+      body: body,
+    );
   }
 }

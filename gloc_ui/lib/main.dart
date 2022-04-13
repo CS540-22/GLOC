@@ -1,75 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:gloc_ui/data/LanguageIcon.dart';
 import 'package:gloc_ui/widgets/DetailsPage.dart';
+import 'package:gloc_ui/widgets/HistoryPage.dart';
+import 'package:gloc_ui/widgets/HomePage.dart';
+import 'package:gloc_ui/widgets/LoadingPage.dart';
+import 'package:go_router/go_router.dart';
 
+import 'data/ClocRequest.dart';
 import 'data/ClocResult.dart';
-import 'data/LanguageResult.dart';
 
 void main() {
+  GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // Test data to use for UI development
-  final mockLanguages = [
-    LanguageResult(
-        name: 'Dart',
-        files: 26,
-        blank: 190,
-        comment: 94,
-        code: 1668,
-        icon: LanguageIcon('Dart')),
-    LanguageResult(
-        name: 'XML',
-        files: 13,
-        blank: 2,
-        comment: 37,
-        code: 319,
-        icon: LanguageIcon('XML')),
-    LanguageResult(
-        name: 'JSON',
-        files: 5,
-        blank: 0,
-        comment: 0,
-        code: 236,
-        icon: LanguageIcon('JSON')),
-    LanguageResult(
-        name: 'YAML',
-        files: 2,
-        blank: 18,
-        comment: 51,
-        code: 103,
-        icon: LanguageIcon('YAML')),
-  ];
-
-  final mockClocResult = ClocResult(
-    totalFiles: 78,
-    totalLines: 274 + 203 + 2575,
-    totalBlank: 274,
-    totalComment: 203,
-    totalCode: 2575,
-    languages: [],
-    commitHash: null,
-    date: null,
-  );
-
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
-          primarySwatch: Colors.blue,
-        ),
-        home: DetailsPage());
-  }
+  Widget build(BuildContext context) => MaterialApp.router(
+        routeInformationParser: _router.routeInformationParser,
+        routerDelegate: _router.routerDelegate,
+      );
+
+  final _router = GoRouter(
+    initialLocation: '/',
+    routes: <GoRoute>[
+      GoRoute(
+          name: 'home',
+          path: '/',
+          builder: (context, state) => HomePage(key: state.pageKey),
+          routes: [
+            GoRoute(
+                name: 'loading',
+                path: 'loading',
+                redirect: (state) => (state.extra == null) ? '/' : null,
+                builder: (context, state) => LoadingPage(
+                      key: state.pageKey,
+                      request: state.extra! as ClocRequest,
+                    )),
+            GoRoute(
+                name: 'details',
+                path: 'details',
+                redirect: (state) => (state.extra == null) ? '/' : null,
+                builder: (context, state) => DetailsPage(
+                    key: state.pageKey,
+                    clocResult: state.extra! as ClocResult)),
+            GoRoute(
+                name: 'history',
+                path: 'history',
+                redirect: (state) => (state.extra == null) ? '/' : null,
+                builder: (context, state) => HistoryPage(
+                    key: state.pageKey,
+                    historyResult: state.extra! as List<ClocResult>)),
+          ]),
+    ],
+    errorPageBuilder: (context, state) => MaterialPage(
+        key: state.pageKey,
+        child: Scaffold(
+          body: Center(child: Text(state.error.toString())),
+        )),
+  );
 }
