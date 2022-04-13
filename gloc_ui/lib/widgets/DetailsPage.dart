@@ -18,6 +18,7 @@ class DetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _RepoTitle(url: clocResult.giturl),
@@ -126,19 +127,32 @@ class _LanguageCardList extends StatelessWidget {
         );
 
         return Card(
-            child: Column(children: [
-          ListTile(
-            leading: icon,
-            title: Text(
-              data.name,
-              style: Theme.of(context).textTheme.headlineMedium,
+          child: Column(children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 400.0),
+              child: ListTile(
+                leading: icon,
+                title: Text(
+                  data.name,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                subtitle: Text(
+                  '$totalLines lines, ${data.files} files',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
             ),
-            subtitle: Text(
-              '$totalLines lines, ${data.files} files',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          )
-        ]));
+            _HorizontalBarGraph(
+              [data.code, data.comment, data.blank],
+              [
+                data.icon.colorPalette[0],
+                data.icon.colorPalette[1],
+                data.icon.colorPalette[2]
+              ],
+              ['Code', 'Comment', 'Blank'],
+            )
+          ]),
+        );
       },
     );
   }
