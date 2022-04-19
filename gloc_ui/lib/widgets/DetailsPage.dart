@@ -1,9 +1,12 @@
+import 'dart:convert';
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gloc_ui/data/ClocResult.dart';
+import 'package:gloc_ui/data/LanguageResult.dart';
 import 'package:collection/collection.dart';
 
-import '../data/LanguageResult.dart';
 import 'LangaugePieChart.dart';
 
 class DetailsPage extends StatelessWidget {
@@ -211,5 +214,26 @@ class _HorizontalBarGraph extends StatelessWidget {
         ),
       ]),
     );
+  }
+}
+
+class _DownloadResults extends StatelessWidget {
+  const _DownloadResults({Key? key, required this.clocResult})
+      : super(key: key);
+
+  final ClocResult clocResult;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed: () {
+          final content = base64Encode(json.encode([clocResult]).codeUnits);
+          final anchor = AnchorElement(
+              href:
+                  "data:application/octet-stream;charset=utf-16le;base64,$content")
+            ..setAttribute("download", "results.json")
+            ..click();
+        },
+        child: const Text("Download Results"));
   }
 }
