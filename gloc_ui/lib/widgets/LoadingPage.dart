@@ -101,6 +101,7 @@ class _StatusMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+        color: Colors.white,
         child: Text(message, style: Theme.of(context).textTheme.displaySmall));
   }
 }
