@@ -94,20 +94,24 @@ class _URLForm extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 400.0),
       child: Material(
-          child: TextFormField(
-        controller: controller,
-        validator: (value) {
-          if (value == null) return 'Enter a valid Github URL';
-          if (value.isEmpty) return 'URL cannot be blank';
-          Uri? url = Uri.tryParse(value);
-          if (url == null) return 'URL parse error';
-          if (!url.isScheme('https'))
-            return 'Make sure it has https:// at the front';
-          if (url.host != 'github.com')
-            return 'Project must be hosted at github.com';
-          if (url.hasEmptyPath) return 'Github URL must contain project path';
-          return null;
-        },
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+          decoration: InputDecoration(hintText: "Enter GitHub URL"),
+          controller: controller,
+          validator: (value) {
+            if (value == null) return 'Enter a valid Github URL';
+            if (value.isEmpty) return 'URL cannot be blank';
+            Uri? url = Uri.tryParse(value);
+            if (url == null) return 'URL parse error';
+            if (!url.isScheme('https'))
+              return 'Make sure it has https:// at the front';
+            if (url.host != 'github.com')
+              return 'Project must be hosted at github.com';
+            if (url.hasEmptyPath) return 'Github URL must contain project path';
+            return null;
+          },
+        ),
       )),
     );
   }
