@@ -7,9 +7,12 @@ import 'package:gloc_ui/data/ClocResult.dart';
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({
+  HomePage({
     Key? key,
   }) : super(key: key);
+
+  final urlController =
+      TextEditingController(text: 'https://github.com/CS540-22/GLOC');
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +20,9 @@ class HomePage extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        _URLForm(urlController),
+        _Analyze(urlController),
         Expanded(child: _Dropzone()),
-        ElevatedButton(
-          onPressed: () {
-            context.goNamed('loading',
-                extra: ClocRequest(
-                    'https://github.com/CS540-22/GLOC', RequestType.single));
-          },
-          child: const Text('Submit'),
-        ),
       ],
     );
   }
@@ -78,5 +75,48 @@ class _DropzoneState extends State<_Dropzone> {
               ),
               Center(child: Text('Drop results here')),
             ])));
+  }
+}
+
+class _URLForm extends StatelessWidget {
+  const _URLForm(this.controller);
+
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+        child: TextFormField(
+      controller: controller,
+      validator: (value) {
+        if (value == null) return 'Enter a valid Github URL';
+        if (value.isEmpty) return 'URL cannot be blank';
+        Uri? url = Uri.tryParse(value);
+        if (url == null) return 'URL parse error';
+        if (!url.isScheme('https'))
+          return 'Make sure it has https:// at the front';
+        if (url.host != 'github.com')
+          return 'Project must be hosted at github.com';
+        if (url.hasEmptyPath) return 'Github URL must contain project path';
+        return null;
+      },
+    ));
+  }
+}
+
+class _Analyze extends StatelessWidget {
+  const _Analyze(this.controller);
+
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        context.goNamed('loading',
+            extra: ClocRequest(controller.text, RequestType.single));
+      },
+      child: const Text('ANALYZE'),
+    );
   }
 }
