@@ -17,7 +17,10 @@ RUN flutter config --enable-web
 RUN mkdir /app/
 COPY ./gloc_ui /app/
 WORKDIR /app/
-RUN flutter build web
+
+ARG api_url
+
+RUN flutter build web --dart-define=API_URL=$api_url  
 
 # Build the runtime image
 FROM --platform=aarch64 nginx:stable-alpine

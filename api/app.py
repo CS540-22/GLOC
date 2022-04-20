@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from git import Repo
-from wtforms import Form, StringField, IntegerField, validators
 from rq import Queue, get_current_job
 from rq.job import Job, NoSuchJobError
+from wtforms import Form, StringField, IntegerField, validators
 import redis
 import json
 import os
@@ -12,6 +13,8 @@ import subprocess
 
 
 app = Flask(__name__)
+cors = CORS(app, resources={
+            r"/*": {"origins": "https://gloc.homelab.benlg.dev"}})
 conn = redis.Redis(host=os.environ.get("REDIS_HOST"), port=6379, db=0,
                    password=os.environ.get("REDIS_AUTH"))
 q = Queue(connection=conn)
