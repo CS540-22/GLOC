@@ -16,7 +16,7 @@ class ClocRequest {
       body['limit'] = '5';
     }
     return await post(
-      Uri.https('gloc.homelab.benlg.dev', type.name),
+      Uri.https('gloc-api.homelab.benlg.dev', type.name),
       body: body,
     );
   }

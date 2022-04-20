@@ -18,30 +18,28 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Download Tailscale
-        shell: bash
-        id: download
-        run: |
-          curl -fsSL https://tailscale.com/install.sh | sh
-      - name: Run Tailscale
-        shell: bash
-        run: |
-          HOSTNAME="github-$(cat /etc/hostname)"
-          sudo tailscale up --authkey ${{ secrets.TAILSCALE_AUTHKEY }} --hostname=${HOSTNAME}
-      - name: Ping CLOC API Endpoint
-        run: |
-          echo "::set-output name=RESPONSE::$(curl -Is http://gloc.homelab.benlg.dev/gloc?giturl=https://github.com/attendio/attendio.git | grep HTTP | cut -d ' ' -f2)"
-        id: endpoint_check
-      - name: Verify Endpoint Check
-        if: steps.endpoint_check.RESPONSE != 200
-        uses: actions/github-script@v6
+      - name: Tailscale
+        uses: tailscale/github-action@v1
         with:
-          script: |
-              core.setFailed('CLOC API endpoint did not pass liveliness probe!')
-          
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          version: 1.22.2
+      - name: OWASP ZAP Baseline Scan
+        # You may pin to the exact commit or the version.
+        # uses: zaproxy/action-baseline@df1ee70ea1ebbdaa1b48e6fc861e0dc0a71fedd8
+        uses: zaproxy/action-baseline@v0.6.1
+        with:
+          # Target URL
+          target: https://gloc.homelab.benlg.dev
+          # The action will file the report to the GitHub issue using the issue_title input
+          allow_issue_writing: false
+
+
+        
+      
+
         
 

@@ -178,7 +178,7 @@ api/config.py
 /build/
 
 # Web related
-lib/generated_plugin_registrant.dart
+**/lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols
