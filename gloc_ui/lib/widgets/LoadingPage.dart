@@ -32,8 +32,14 @@ class LoadingPageState extends State<LoadingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text(currentJob.createStatusMessage()),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _StatusMessage(message: currentJob.createStatusMessage()),
+        _LoadingBar(),
+      ],
     );
   }
 
@@ -82,5 +88,34 @@ class LoadingPageState extends State<LoadingPage> {
         }
       });
     });
+  }
+}
+
+class _StatusMessage extends StatelessWidget {
+  const _StatusMessage({
+    required this.message,
+  });
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+        color: Colors.white,
+        child: Text(message, style: Theme.of(context).textTheme.displaySmall));
+  }
+}
+
+class _LoadingBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: SizedBox(
+          width: 300,
+          child: LinearProgressIndicator(
+            value: null,
+          )),
+    );
   }
 }

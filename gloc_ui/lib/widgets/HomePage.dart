@@ -7,25 +7,28 @@ import 'package:gloc_ui/data/ClocResult.dart';
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({
+  HomePage({
     Key? key,
   }) : super(key: key);
+
+  final urlController =
+      TextEditingController(text: 'https://github.com/CS540-22/GLOC');
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(child: _Dropzone()),
-        ElevatedButton(
-          onPressed: () {
-            context.goNamed('loading',
-                extra: ClocRequest(
-                    'https://github.com/CS540-22/GLOC', RequestType.single));
-          },
-          child: const Text('Submit'),
-        ),
+        Text('G.L.O.C.', style: Theme.of(context).textTheme.displayMedium),
+        Text('Graphical Lines of Code',
+            style: Theme.of(context).textTheme.headlineMedium),
+        SizedBox(height: 30.0),
+        _URLForm(urlController),
+        SizedBox(height: 30.0),
+        _Analyze(urlController),
+        // Expanded(child: _Dropzone()), //TODO add back in when design is finalized
       ],
     );
   }
@@ -78,5 +81,58 @@ class _DropzoneState extends State<_Dropzone> {
               ),
               Center(child: Text('Drop results here')),
             ])));
+  }
+}
+
+class _URLForm extends StatelessWidget {
+  const _URLForm(this.controller);
+
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 400.0),
+      child: Material(
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+          decoration: InputDecoration(hintText: "Enter GitHub URL"),
+          controller: controller,
+          validator: (value) {
+            if (value == null) return 'Enter a valid Github URL';
+            if (value.isEmpty) return 'URL cannot be blank';
+            Uri? url = Uri.tryParse(value);
+            if (url == null) return 'URL parse error';
+            if (!url.isScheme('https'))
+              return 'Make sure it has https:// at the front';
+            if (url.host != 'github.com')
+              return 'Project must be hosted at github.com';
+            if (url.hasEmptyPath) return 'Github URL must contain project path';
+            return null;
+          },
+        ),
+      )),
+    );
+  }
+}
+
+class _Analyze extends StatelessWidget {
+  const _Analyze(this.controller);
+
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 400.0, minWidth: 200.0),
+      child: ElevatedButton(
+        onPressed: () {
+          context.goNamed('loading',
+              extra: ClocRequest(controller.text, RequestType.single));
+        },
+        child: const Text('ANALYZE'),
+      ),
+    );
   }
 }
