@@ -60,4 +60,4 @@ void main() {
 ```
 
 # Request Flow Through Backend
-![Backend Diagram](https://github.com/CS540-22/GLOC/blob/main/docs/Backend%20Processing.png)
+![Backend Diagram](images/Backend%20Processing.png)

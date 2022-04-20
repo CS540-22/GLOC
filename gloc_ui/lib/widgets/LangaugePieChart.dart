@@ -38,12 +38,14 @@ class LanguagePieChartState extends State<LanguagePieChart> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: PieChart(
-        PieChartData(
-            pieTouchData: PieTouchData(
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {
+    return Material(
+        color: Colors.white,
+        child: SizedBox(
+          height: 200,
+          child: PieChart(
+            PieChartData(
+                pieTouchData: PieTouchData(
+                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
                   setState(() {
                     if (!event.isInterestedForInteractions ||
                         pieTouchResponse == null ||
@@ -55,14 +57,14 @@ class LanguagePieChartState extends State<LanguagePieChart> {
                         pieTouchResponse.touchedSection!.touchedSectionIndex;
                   });
                 }),
-            borderData: FlBorderData(
-              show: false,
-            ),
-            sectionsSpace: 0,
-            centerSpaceRadius: 40,
-            sections: showingSections()),
-      ),
-    );
+                borderData: FlBorderData(
+                  show: false,
+                ),
+                sectionsSpace: 0,
+                centerSpaceRadius: 40,
+                sections: showingSections()),
+          ),
+        ));
   }
 
   // combines smaller languages into an "other" language
