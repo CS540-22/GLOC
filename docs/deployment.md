@@ -2,6 +2,8 @@
 
 Our project has a front-end and back-end that must communicate with each other. They communicate through http requests that deliver json for parameters and data. If both are not deployed properly, only limited functionality will be available.
 
+For the immediate future, we would like to host our flutter front end on the cluster as well as the api. Once we make sure it is secure, we can expose it to the public internet. If someone didn't want to use our tool or wanted to run it themselves, below are some deployment options for the front-end and back-end.
+
 ## Front-end deployment options
 
 ### With repo clone
@@ -15,11 +17,12 @@ Our project has a front-end and back-end that must communicate with each other. 
 ### Run the API 
 1) Clone the repo
 2) Go to the api directory
-3) Replace the REDIS_HOST env var with your own redis instance
-4) Provide your own redis password or remove the variable from the api's redis connection if not using a password
-5) Provide the FLASK_HOST env var to tell flask which host ip to run on
-6) Provide your own SECRET_KEY for flask
-7) Run the flask app with the `cloc.sh` script
+3) Supply values for the environment variables REDIS_HOST, REDIS_AUTH, FLASK_HOST, and SECRET_KEY
+4) REDIS_HOST=Your redis instance
+5) REDIS_AUTH=Your redis masterauth/requirepass password
+6) FLASK_HOST=Ip address to run your Flask app on
+7) SECRET_KEY=Your Flask app's secret key
+7) Run the Flask app with the `cloc.sh` script
 
 ### (Optional) Deploy a Redis server in a k8s cluster 
 1) Clone the repo and go to cluster/k8s/redis/
