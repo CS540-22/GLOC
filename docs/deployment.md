@@ -22,7 +22,8 @@ For the immediate future, we would like to host our flutter front end on the clu
 5) REDIS_AUTH=Your redis masterauth/requirepass password
 6) FLASK_HOST=Ip address to run your Flask app on
 7) SECRET_KEY=Your Flask app's secret key
-7) Run the Flask app with the `cloc.sh` script
+8) Install the dependencies with `pip install -r requirements.txt`
+9) Run the Flask app with the `cloc.sh` script
 
 ### (Optional) Deploy a Redis server in a k8s cluster 
 1) Clone the repo and go to cluster/k8s/redis/
