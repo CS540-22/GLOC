@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:gloc_ui/data/ClocRequest.dart';
 import 'package:gloc_ui/data/ClocResult.dart';
@@ -11,12 +12,10 @@ class HomePage extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final urlController =
-      TextEditingController(text: 'https://github.com/CS540-22/GLOC');
-
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Material(
+        child: Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -25,12 +24,11 @@ class HomePage extends StatelessWidget {
         Text('Graphical Lines of Code',
             style: Theme.of(context).textTheme.headlineMedium),
         SizedBox(height: 30.0),
-        _URLForm(urlController),
+        _ConfigurationForm(),
         SizedBox(height: 30.0),
-        _Analyze(urlController),
         // Expanded(child: _Dropzone()), //TODO add back in when design is finalized
       ],
-    );
+    ));
   }
 }
 
@@ -84,54 +82,147 @@ class _DropzoneState extends State<_Dropzone> {
   }
 }
 
-class _URLForm extends StatelessWidget {
-  const _URLForm(this.controller);
-
-  final TextEditingController controller;
+class _ConfigurationForm extends StatefulWidget {
+  _ConfigurationForm({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 400.0),
-      child: Material(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-          decoration: InputDecoration(hintText: "Enter GitHub URL"),
-          controller: controller,
-          validator: (value) {
-            if (value == null) return 'Enter a valid Github URL';
-            if (value.isEmpty) return 'URL cannot be blank';
-            Uri? url = Uri.tryParse(value);
-            if (url == null) return 'URL parse error';
-            if (!url.isScheme('https'))
-              return 'Make sure it has https:// at the front';
-            if (url.host != 'github.com')
-              return 'Project must be hosted at github.com';
-            if (url.hasEmptyPath) return 'Github URL must contain project path';
-            return null;
-          },
-        ),
-      )),
-    );
-  }
+  State<StatefulWidget> createState() => _ConfigurationFormState();
 }
 
-class _Analyze extends StatelessWidget {
-  const _Analyze(this.controller);
-
-  final TextEditingController controller;
+class _ConfigurationFormState extends State<_ConfigurationForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController urlController =
+      TextEditingController(text: 'https://github.com/CS540-22/GLOC');
+  TextEditingController limitController = TextEditingController(text: '5');
+  TextEditingController stepController = TextEditingController(text: '1');
+  RequestType type = RequestType.single;
+  bool advancedSelected = false;
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 400.0, minWidth: 200.0),
-      child: ElevatedButton(
-        onPressed: () {
-          context.goNamed('loading',
-              extra: ClocRequest(controller.text, RequestType.single));
-        },
-        child: const Text('ANALYZE'),
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 400.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(hintText: "Enter GitHub URL"),
+                      controller: urlController,
+                      validator: (value) {
+                        if (value == null) return 'Enter a valid Github URL';
+                        if (value.isEmpty) return 'URL cannot be blank';
+                        Uri? url = Uri.tryParse(value);
+                        if (url == null) return 'URL parse error';
+                        if (!url.isScheme('https'))
+                          return 'Make sure it has https:// at the front';
+                        if (url.host != 'github.com')
+                          return 'Project must be hosted at github.com';
+                        if (url.hasEmptyPath)
+                          return 'Github URL must contain project path';
+                        return null;
+                      },
+                    ),
+                  )),
+              DropdownButton(
+                value: type,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: RequestType.values.map((RequestType type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(
+                        type.name[0].toUpperCase() + type.name.substring(1)),
+                  );
+                }).toList(),
+                onChanged: (RequestType? newValue) {
+                  setState(() {
+                    type = newValue!;
+                  });
+                },
+              ),
+            ],
+          ),
+          if (type == RequestType.history)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 250.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          controller: limitController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          decoration: InputDecoration(
+                              labelText: "Limit",
+                              icon: Icon(
+                                Icons.last_page,
+                                size: 30,
+                              )),
+                          validator: (value) {
+                            if (value == null)
+                              return "Please enter valid number";
+                            int? limit = int.tryParse(value);
+                            if (limit == null)
+                              return "Please enter valid number";
+                            if (limit < 1)
+                              return "Limit must be greater than 0";
+                            return null;
+                          }),
+                    )),
+                ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 250.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          controller: stepController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          decoration: InputDecoration(
+                              labelText: "Step",
+                              icon: Icon(
+                                Icons.redo,
+                                size: 25,
+                              )),
+                          validator: (value) {
+                            if (value == null)
+                              return "Please enter valid number";
+                            int? step = int.tryParse(value);
+                            if (step == null)
+                              return "Please enter valid number";
+                            if (step < 1) return "Step must be greater than 0";
+                            return null;
+                          }),
+                    )),
+              ],
+            ),
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 400.0, minWidth: 200.0),
+            child: ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  context.goNamed('loading',
+                      extra: ClocRequest(
+                          url: urlController.text,
+                          type: type,
+                          limit: limitController.text,
+                          step: stepController.text));
+                }
+              },
+              child: const Text('ANALYZE'),
+            ),
+          ),
+        ],
       ),
     );
   }
