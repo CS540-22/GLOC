@@ -14,10 +14,10 @@ List<ClocResult> mockHistoryResult() {
 class HistoryPage extends StatelessWidget {
   const HistoryPage({
     Key? key,
-    // required this.historyResult,
+    required this.historyResult,
   }) : super(key: key);
 
-  // final List<ClocResult> historyResult;
+  final List<ClocResult> historyResult;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,8 @@ class HistoryPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        HistoryLineChart(historyResult: mockHistoryResult()),
+        SizedBox(
+            width: 800, child: HistoryLineChart(historyResult: historyResult)),
       ],
     );
   }

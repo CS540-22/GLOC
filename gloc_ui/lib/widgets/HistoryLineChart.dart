@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:math';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -84,11 +86,20 @@ class HistoryLineChartState extends State<HistoryLineChart> {
       );
 
   LineTouchData get lineTouchData => LineTouchData(
-        handleBuiltInTouches: true,
-        touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
-        ),
-      );
+      handleBuiltInTouches: true,
+      touchTooltipData: LineTouchTooltipData(
+        tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+      ),
+      touchCallback: (e, r) {
+        if (e is FlTapUpEvent && (r?.lineBarSpots?.length ?? 0) > 0) {
+          // print(e);
+          // inspect(r);
+          // go to details page
+          ClocResult single =
+              widget.historyResult[r!.lineBarSpots![0].spotIndex];
+          context.pushNamed('details2', extra: single);
+        }
+      });
 
   FlTitlesData get titlesData => FlTitlesData(
         bottomTitles: AxisTitles(
@@ -173,16 +184,6 @@ class HistoryLineChartState extends State<HistoryLineChart> {
     }
 
     return Padding(child: text, padding: const EdgeInsets.only(top: 10.0));
-  }
-
-  List<FlSpot> generateSpotsFromLanguageHistory(
-      Map<int, LanguageResult> langHistory) {
-    var newMap = langHistory
-        .map((index, result) =>
-            MapEntry(index, FlSpot(index.toDouble(), result.code.toDouble())))
-        .values
-        .toList();
-    return newMap;
   }
 
   initializeLineChartData(List<ClocResult> history) {
