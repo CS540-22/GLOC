@@ -46,10 +46,11 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 name: 'history',
                 path: 'history',
-                redirect: (state) => (state.extra == null) ? '/' : null,
+                // redirect: (state) => (state.extra == null) ? '/' : null,
                 builder: (context, state) => HistoryPage(
-                    key: state.pageKey,
-                    historyResult: state.extra! as List<ClocResult>)),
+                      key: state.pageKey,
+                      // historyResult: state.extra! as List<ClocResult>
+                    )),
           ]),
     ],
     errorPageBuilder: (context, state) => MaterialPage(
