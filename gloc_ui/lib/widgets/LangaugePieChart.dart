@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_palette/flutter_palette.dart';
 
 import '../data/ClocResult.dart';
 import '../data/LanguageIcon.dart';
@@ -21,19 +20,11 @@ class LanguagePieChart extends StatefulWidget {
 class LanguagePieChartState extends State<LanguagePieChart> {
   int touchedIndex = -1;
   late List<LanguageResult> graphLanguages;
-  late ColorPalette graphColors;
 
   @override
   void initState() {
     super.initState();
     graphLanguages = generateGraphLanguages(widget.clocResult, .05);
-    graphColors = ColorPalette.polyad(
-      const HslColor(300, 100, 40),
-      numberOfColors: graphLanguages.length,
-      // hueVariability: 15,
-      // saturationVariability: 10,
-      // brightnessVariability: 10,
-    );
   }
 
   @override
@@ -112,7 +103,7 @@ class LanguagePieChartState extends State<LanguagePieChart> {
       final fontSize = isTouched ? 25.0 : 16.0;
       final radius = isTouched ? 120.0 : 100.0;
       return PieChartSectionData(
-        color: graphColors[i],
+        color: graphLanguages[i].icon.colorPalette[0],
         value: graphLanguages[i].code.toDouble(),
         title: graphLanguages[i].name,
         radius: radius,
