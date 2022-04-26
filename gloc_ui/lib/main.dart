@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gloc_ui/widgets/DetailsPage.dart';
-import 'package:gloc_ui/widgets/HistoryPage.dart';
-import 'package:gloc_ui/widgets/HomePage.dart';
-import 'package:gloc_ui/widgets/LoadingPage.dart';
+import 'package:gloc_ui/pages/DetailsPage.dart';
+import 'package:gloc_ui/pages/HistoryPage.dart';
+import 'package:gloc_ui/pages/HomePage.dart';
+import 'package:gloc_ui/pages/LoadingPage.dart';
 import 'package:go_router/go_router.dart';
 
 import 'data/ClocRequest.dart';

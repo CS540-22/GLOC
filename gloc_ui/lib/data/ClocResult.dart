@@ -61,14 +61,17 @@ class ClocResult {
   factory ClocResult.mockResult() {
     String jsonString =
         '{"header":{"cloc_url":"github.com/AlDanial/cloc","cloc_version":"1.90","elapsed_seconds":0.327791929244995,"n_files":58,"n_lines":3042,"files_per_second":176.941513275179,"lines_per_second":9280.27729970855},"Dart":{"nFiles":26,"blank":190,"comment":94,"code":1668},"XML":{"nFiles":13,"blank":2,"comment":37,"code":319},"JSON":{"nFiles":5,"blank":0,"comment":0,"code":236},"YAML":{"nFiles":2,"blank":18,"comment":51,"code":103},"Gradle":{"nFiles":3,"blank":18,"comment":3,"code":88},"HTML":{"nFiles":1,"blank":13,"comment":17,"code":53},"Markdown":{"nFiles":4,"blank":25,"comment":0,"code":44},"CSS":{"nFiles":1,"blank":5,"comment":0,"code":38},"Swift":{"nFiles":1,"blank":1,"comment":0,"code":12},"Kotlin":{"nFiles":1,"blank":2,"comment":0,"code":4},"C/C++Header":{"nFiles":1,"blank":0,"comment":0,"code":1},"SUM":{"blank":274,"comment":202,"code":2566,"nFiles":58}}';
-    return ClocResult.fromJson(jsonDecode(jsonString), giturl: Uri.parse('github.com/AlDanial/cloc'));
+    return ClocResult.fromJson(jsonDecode(jsonString),
+        giturl: Uri.parse('github.com/AlDanial/cloc'));
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {
       'header': {
         'commit_hash': commitHash,
-        'date': date,
+        'date': (date?.millisecondsSinceEpoch == null)
+            ? null
+            : date!.millisecondsSinceEpoch ~/ Duration.millisecondsPerSecond,
         'n_files': totalFiles,
         'n_lines': totalLines,
       },
