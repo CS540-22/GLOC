@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gloc_ui/widgets/DetailsPage.dart';
-import 'package:gloc_ui/widgets/HistoryPage.dart';
-import 'package:gloc_ui/widgets/HomePage.dart';
-import 'package:gloc_ui/widgets/LoadingPage.dart';
+import 'package:gloc_ui/pages/DetailsPage.dart';
+import 'package:gloc_ui/pages/HistoryPage.dart';
+import 'package:gloc_ui/pages/HomePage.dart';
+import 'package:gloc_ui/pages/LoadingPage.dart';
 import 'package:go_router/go_router.dart';
 
 import 'data/ClocRequest.dart';
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 name: 'history',
                 path: 'history',
-                // redirect: (state) => (state.extra == null) ? '/' : null,
+                redirect: (state) => (state.extra == null) ? '/' : null,
                 builder: (context, state) => HistoryPage(
                     key: state.pageKey,
                     historyResult: state.extra! as List<ClocResult>)),

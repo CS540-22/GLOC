@@ -69,7 +69,9 @@ class ClocResult {
     Map<String, dynamic> json = {
       'header': {
         'commit_hash': commitHash,
-        'date': date,
+        'date': (date?.millisecondsSinceEpoch == null)
+            ? null
+            : date!.millisecondsSinceEpoch ~/ Duration.millisecondsPerSecond,
         'n_files': totalFiles,
         'n_lines': totalLines,
       },

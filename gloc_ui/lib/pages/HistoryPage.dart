@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:gloc_ui/widgets/DownloadResults.dart';
 import 'package:gloc_ui/widgets/HistoryLineChart.dart';
 import 'package:flutter/material.dart';
 import 'package:gloc_ui/data/ClocResult.dart';
+import 'package:gloc_ui/widgets/LanguageCardList.dart';
 
 List<ClocResult> mockHistoryResult() {
   String jsonString =
@@ -11,13 +13,26 @@ List<ClocResult> mockHistoryResult() {
       .toList();
 }
 
-class HistoryPage extends StatelessWidget {
-  const HistoryPage({
+class HistoryPage extends StatefulWidget {
+  HistoryPage({
     Key? key,
     required this.historyResult,
   }) : super(key: key);
 
   final List<ClocResult> historyResult;
+
+  @override
+  State<HistoryPage> createState() => HistoryPageState();
+}
+
+class HistoryPageState extends State<HistoryPage> {
+  int clickedIndex = 0;
+
+  void updateClickedIndex(int newIdx) {
+    setState(() {
+      clickedIndex = newIdx;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +41,27 @@ class HistoryPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
-            width: 800, child: HistoryLineChart(historyResult: historyResult)),
+            width: 500,
+            child: HistoryLineChart(
+              historyResult: widget.historyResult,
+              updateClickedIndex: updateClickedIndex,
+            )),
+        DownloadResults(results: widget.historyResult),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: 400,
+                height: 200,
+                child: LanguageCardList(widget
+                    .historyResult[widget.historyResult.length - 1].languages)),
+            SizedBox(
+                width: 400,
+                height: 200,
+                child: LanguageCardList(
+                    widget.historyResult[clickedIndex].languages)),
+          ],
+        ),
       ],
     );
   }

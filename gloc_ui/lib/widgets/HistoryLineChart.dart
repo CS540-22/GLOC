@@ -1,7 +1,4 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:math';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -11,9 +8,12 @@ import 'package:gloc_ui/data/ClocResult.dart';
 import 'package:gloc_ui/data/LanguageResult.dart';
 
 class HistoryLineChart extends StatefulWidget {
-  HistoryLineChart({Key? key, required this.historyResult}) : super(key: key);
+  HistoryLineChart(
+      {Key? key, required this.historyResult, required this.updateClickedIndex})
+      : super(key: key);
 
   final List<ClocResult> historyResult;
+  final ValueSetter<int> updateClickedIndex;
 
   @override
   State<StatefulWidget> createState() => HistoryLineChartState();
@@ -92,12 +92,7 @@ class HistoryLineChartState extends State<HistoryLineChart> {
       ),
       touchCallback: (e, r) {
         if (e is FlTapUpEvent && (r?.lineBarSpots?.length ?? 0) > 0) {
-          // print(e);
-          // inspect(r);
-          // go to details page
-          ClocResult single =
-              widget.historyResult[r!.lineBarSpots![0].spotIndex];
-          context.pushNamed('details2', extra: single);
+          widget.updateClickedIndex(r!.lineBarSpots![0].spotIndex);
         }
       });
 
