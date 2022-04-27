@@ -19,6 +19,7 @@ class LanguageCardList extends StatelessWidget {
           data.icon.path,
           width: 56.0,
           height: 56.0,
+          color: (data.icon.recolorIcon) ? data.icon.colorPalette.first : null,
         );
 
         return Card(
