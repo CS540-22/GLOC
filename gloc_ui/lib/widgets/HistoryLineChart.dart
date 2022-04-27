@@ -199,19 +199,11 @@ class HistoryLineChartState extends State<HistoryLineChart> {
       }
     }
 
-    ColorPalette barColors = ColorPalette.polyad(
-      const HslColor(10, 100, 70),
-      numberOfColors: languageData.length,
-      // hueVariability: 15,
-      // saturationVariability: 10,
-      // brightnessVariability: 10,
-    );
-
     languageBars = List.generate(languageData.length, (i) {
       String key = languageData.keys.elementAt(i);
       return LineChartBarData(
         isCurved: false,
-        color: barColors[i],
+        color: languageData[key]!.values.first.icon.colorPalette.first,
         barWidth: 4,
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),

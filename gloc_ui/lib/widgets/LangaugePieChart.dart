@@ -103,7 +103,7 @@ class LanguagePieChartState extends State<LanguagePieChart> {
       final fontSize = isTouched ? 25.0 : 16.0;
       final radius = isTouched ? 120.0 : 100.0;
       return PieChartSectionData(
-        color: graphLanguages[i].icon.colorPalette[0],
+        color: graphLanguages[i].icon.colorPalette.first,
         value: graphLanguages[i].code.toDouble(),
         title: graphLanguages[i].name,
         radius: radius,

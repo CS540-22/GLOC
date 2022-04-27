@@ -14,7 +14,10 @@ class LanguageIcon {
     for (var i = 0; i < 3; i++) {
       if (i < colorStrings.length) {
         if (colorStrings[i] == '040404' && colorStrings.length == 1) {
-          var color = HslColor.random(maxLightness: 30, minLightness: 20);
+          var color = HslColor(
+              languageName.hashCode % 360,
+              (languageName.hashCode % 10) + 70,
+              (languageName.hashCode % 10) + 40);
           colorPalette.add(color);
           recolorIcon = true;
         } else {
