@@ -17,27 +17,29 @@ class DetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _RepoTitle(url: clocResult.giturl),
-        SizedBox(height: _cardSpacing),
-        _CodeCount(
-            totalLines: clocResult.totalLines,
-            totalCode: clocResult.totalCode,
-            totalBlank: clocResult.totalBlank,
-            totalComment: clocResult.totalComment),
-        SizedBox(height: _cardSpacing * 2),
-        // Double spacer to avoid overlapping
-        LanguagePieChart(
-          clocResult: clocResult,
-        ),
-        SizedBox(height: _cardSpacing * 2),
-        DownloadResults(results: [clocResult]),
-        SizedBox(height: _cardSpacing * 2),
-        Expanded(child: LanguageCardList(clocResult.languages)),
-      ],
+    return LimitedBox(
+      maxWidth: 400.0,
+      child: ListView(
+        children: [
+          _RepoTitle(url: clocResult.giturl),
+          SizedBox(height: _cardSpacing),
+          _CodeCount(
+              totalLines: clocResult.totalLines,
+              totalCode: clocResult.totalCode,
+              totalBlank: clocResult.totalBlank,
+              totalComment: clocResult.totalComment),
+          SizedBox(height: _cardSpacing * 2),
+          // Double spacer to avoid overlapping
+          LanguagePieChart(
+            clocResult: clocResult,
+          ),
+          SizedBox(height: _cardSpacing * 2),
+          DownloadResults(results: [clocResult]),
+          SizedBox(height: _cardSpacing * 2),
+          Expanded(child: LanguageCardList(clocResult.languages)),
+          SizedBox(height: _cardSpacing * 2),
+        ],
+      ),
     );
   }
 }
