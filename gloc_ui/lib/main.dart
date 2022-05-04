@@ -16,9 +16,23 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp.router(
-        routeInformationParser: _router.routeInformationParser,
-        routerDelegate: _router.routerDelegate,
-      );
+      routeInformationParser: _router.routeInformationParser,
+      routerDelegate: _router.routerDelegate,
+      theme: ThemeData(
+          primaryColor: Color(0xff6750A4),
+          textTheme: const TextTheme(
+            displayLarge: TextStyle(fontFamily: 'IBMPlexMono'),
+            displayMedium: TextStyle(fontFamily: 'IBMPlexMono'),
+            displaySmall: TextStyle(fontFamily: 'IBMPlexMono'),
+            titleLarge: TextStyle(fontFamily: 'IBMPlexMono'),
+            titleMedium: TextStyle(fontFamily: 'IBMPlexMono'),
+            titleSmall: TextStyle(fontFamily: 'IBMPlexMono'),
+            labelLarge: TextStyle(fontFamily: 'IBMPlexMono'),
+            labelMedium: TextStyle(fontFamily: 'IBMPlexMono'),
+            labelSmall: TextStyle(fontFamily: 'IBMPlexMono'),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(primary: Color(0xff6750A4)))));
 
   final _router = GoRouter(
     initialLocation: '/',
