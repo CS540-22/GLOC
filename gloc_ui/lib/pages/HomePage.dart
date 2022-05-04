@@ -51,7 +51,9 @@ class _DropzoneState extends State<_Dropzone> {
         child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
-                color: isHighlighted ? Theme.of(context).splashColor : Theme.of(context).cardColor),
+                color: isHighlighted
+                    ? Theme.of(context).splashColor
+                    : Theme.of(context).cardColor),
             child: Stack(children: [
               DropzoneView(
                 operation: DragOperation.copy,
