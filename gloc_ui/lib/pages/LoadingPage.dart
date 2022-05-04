@@ -115,6 +115,8 @@ class _LoadingBar extends StatelessWidget {
       child: SizedBox(
           width: 300,
           child: LinearProgressIndicator(
+            color: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).backgroundColor,
             value: null,
           )),
     );
