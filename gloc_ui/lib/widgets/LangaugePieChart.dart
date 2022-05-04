@@ -108,8 +108,9 @@ class LanguagePieChartState extends State<LanguagePieChart> {
         title: graphLanguages[i].name,
         radius: radius,
         titleStyle: TextStyle(
+            fontFamily: 'IBMPlexMono',
             fontSize: fontSize,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.normal,
             color: const Color(0xffffffff)),
       );
     });
