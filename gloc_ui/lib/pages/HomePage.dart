@@ -16,10 +16,9 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
         child: Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        Spacer(),
         Text('G.L.O.C.', style: Theme.of(context).textTheme.displayMedium),
         Text('Graphical Lines of Code',
             style: Theme.of(context).textTheme.headlineMedium),
@@ -29,6 +28,16 @@ class HomePage extends StatelessWidget {
         ConstrainedBox(
             constraints: BoxConstraints(maxHeight: 120.0, maxWidth: 500.0),
             child: _Dropzone()),
+        Spacer(),
+        Padding(
+            padding: EdgeInsets.only(bottom: 20.0),
+            child: Text(
+              '''© 2022 Open Commons
+Created by Ben Greenberg, Spencer Howell, and Daniel Troutman
+CS540 @ UTK''',
+              style: Theme.of(context).textTheme.caption,
+              textAlign: TextAlign.center,
+            )),
       ],
     ));
   }
@@ -52,7 +61,7 @@ class _DropzoneState extends State<_Dropzone> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
                 color: isHighlighted
-                    ? Theme.of(context).splashColor
+                    ? Theme.of(context).primaryColorLight
                     : Theme.of(context).cardColor),
             child: Stack(children: [
               DropzoneView(
