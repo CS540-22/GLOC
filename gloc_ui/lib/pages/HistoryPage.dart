@@ -55,36 +55,41 @@ class HistoryPageState extends State<HistoryPage> {
           SizedBox(height: _cardSpacing),
           DownloadResults(results: widget.historyResult),
           SizedBox(height: _cardSpacing),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 200,
-                width: 400,
-                child: Column(
-                  children: [
-                    Text("Clicked Commit",
-                        style: Theme.of(context).textTheme.titleMedium),
-                    LanguageCardList(
-                        widget.historyResult[clickedIndex].languages, true),
-                  ],
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 400,
+                  child: Column(
+                    children: [
+                      Text("Clicked Commit",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      Expanded(
+                        child: LanguageCardList(
+                            widget.historyResult[clickedIndex].languages, true),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 200,
-                width: 400,
-                child: Column(
-                  children: [
-                    Text("Latest Commit",
-                        style: Theme.of(context).textTheme.titleMedium),
-                    LanguageCardList(
-                        widget.historyResult[widget.historyResult.length - 1]
-                            .languages,
-                        true),
-                  ],
+                SizedBox(
+                  width: 400,
+                  child: Column(
+                    children: [
+                      Text("Latest Commit",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      Expanded(
+                        child: LanguageCardList(
+                            widget
+                                .historyResult[widget.historyResult.length - 1]
+                                .languages,
+                            true),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
