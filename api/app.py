@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from git import Repo
+from math import ceil
 from rq import Queue, get_current_job
 from rq.job import Job, NoSuchJobError
 from wtforms import Form, StringField, IntegerField, validators
@@ -100,6 +101,8 @@ def execute_cloc(url, job_hash, runner_type, **kwargs):
         limit = kwargs.get("limit", 1)
         commits = list(repo.iter_commits(
             repo.head, max_count=limit, first_parent=True))[::step]
+
+        limit = ceil(limit/step)
 
         for index, commit in enumerate(reversed(commits)):
             repo.git.checkout(commit)

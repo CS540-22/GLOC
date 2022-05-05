@@ -4,9 +4,10 @@ import 'package:gloc_ui/data/LanguageResult.dart';
 import 'package:gloc_ui/widgets/HorizontalBarGraph.dart';
 
 class LanguageCardList extends StatelessWidget {
-  const LanguageCardList(this.languages);
+  const LanguageCardList(this.languages, this.scrollFlag);
 
   final List<LanguageResult> languages;
+  final bool scrollFlag;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class LanguageCardList extends StatelessWidget {
       // Prevents this ListView from scrolling, it will instead scroll
       // with the outer ListView
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: (scrollFlag) ? null : NeverScrollableScrollPhysics(),
       itemCount: languages.length,
       itemBuilder: (BuildContext context, int index) {
         final data = languages[index];
@@ -54,7 +55,11 @@ class LanguageCardList extends StatelessWidget {
                       data.icon.colorPalette[1],
                       data.icon.colorPalette[2]
                     ],
-                    ['Code', 'Comment', 'Blank'],
+                    [
+                      "Code (${data.code})",
+                      "Comment (${data.comment})",
+                      "Blank (${data.blank})"
+                    ],
                   )
                 ]),
               ),
