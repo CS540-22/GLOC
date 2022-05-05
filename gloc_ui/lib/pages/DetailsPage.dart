@@ -24,7 +24,7 @@ class DetailsPage extends StatelessWidget {
         maxWidth: 400.0,
         child: ListView(
           children: [
-            RepoTitle(url: clocResult.giturl),
+            if (clocResult.giturl != null) RepoTitle(url: clocResult.giturl),
             SizedBox(height: _cardSpacing),
             _CodeCount(
                 totalLines: clocResult.totalLines,
@@ -65,6 +65,7 @@ class _CodeCount extends StatelessWidget {
       children: [
         Text(
           '$totalLines lines of code',
+          textScaleFactor: 1.5,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         HorizontalBarGraph([

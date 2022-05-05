@@ -93,7 +93,7 @@ class _DropzoneState extends State<_Dropzone> {
                   }
                 },
               ),
-              Center(child: Text('Or upload results here.')),
+              Center(child: Text('Or upload results here!')),
             ])));
   }
 }

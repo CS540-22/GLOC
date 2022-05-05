@@ -28,7 +28,7 @@ class HistoryPage extends StatefulWidget {
 
 class HistoryPageState extends State<HistoryPage> {
   int clickedIndex = 0;
-  final _cardSpacing = 30.0;
+  final _cardSpacing = 15.0;
 
   void updateClickedIndex(int newIdx) {
     setState(() {
@@ -44,7 +44,8 @@ class HistoryPageState extends State<HistoryPage> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          RepoTitle(url: widget.historyResult[0].giturl),
+          if (widget.historyResult[0].giturl != null)
+            RepoTitle(url: widget.historyResult[0].giturl),
           SizedBox(height: _cardSpacing),
           SizedBox(
               width: 500,
@@ -63,7 +64,8 @@ class HistoryPageState extends State<HistoryPage> {
                   width: 400,
                   child: Column(
                     children: [
-                      Text("Clicked Commit",
+                      Text("Selected Commit",
+                          textScaleFactor: 1.5,
                           style: Theme.of(context).textTheme.titleMedium),
                       Expanded(
                         child: LanguageCardList(
@@ -77,6 +79,7 @@ class HistoryPageState extends State<HistoryPage> {
                   child: Column(
                     children: [
                       Text("Latest Commit",
+                          textScaleFactor: 1.5,
                           style: Theme.of(context).textTheme.titleMedium),
                       Expanded(
                         child: LanguageCardList(
@@ -94,33 +97,5 @@ class HistoryPageState extends State<HistoryPage> {
         ],
       ),
     );
-    // return Column(
-    //   mainAxisSize: MainAxisSize.min,
-    //   crossAxisAlignment: CrossAxisAlignment.center,
-    //   children: [
-    //     SizedBox(
-    //         width: 500,
-    //         child: HistoryLineChart(
-    //           historyResult: widget.historyResult,
-    //           updateClickedIndex: updateClickedIndex,
-    //         )),
-    //     DownloadResults(results: widget.historyResult),
-    //     Row(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         SizedBox(
-    //             width: 400,
-    //             height: 200,
-    //             child: LanguageCardList(widget
-    //                 .historyResult[widget.historyResult.length - 1].languages)),
-    //         SizedBox(
-    //             width: 400,
-    //             height: 200,
-    //             child: LanguageCardList(
-    //                 widget.historyResult[clickedIndex].languages)),
-    //       ],
-    //     ),
-    //   ],
-    // );
   }
 }
