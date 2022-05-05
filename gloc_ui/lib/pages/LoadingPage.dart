@@ -32,14 +32,17 @@ class LoadingPageState extends State<LoadingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _StatusMessage(message: currentJob.createStatusMessage()),
-        _LoadingBar(),
-      ],
+    return Material(
+      color: Colors.blue[50],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _StatusMessage(message: currentJob.createStatusMessage()),
+          _LoadingBar(),
+        ],
+      ),
     );
   }
 
@@ -100,10 +103,8 @@ class _StatusMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-        color: Colors.white,
-        child: Text(message.toUpperCase(),
-            style: Theme.of(context).textTheme.titleMedium));
+    return Text(message.toUpperCase(),
+        style: Theme.of(context).textTheme.titleMedium);
   }
 }
 
