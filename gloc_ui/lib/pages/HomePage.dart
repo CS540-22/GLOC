@@ -15,31 +15,32 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+        color: Colors.blue[50],
         child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Spacer(),
-        Text('G.L.O.C.', style: Theme.of(context).textTheme.displayMedium),
-        Text('Graphical Lines of Code',
-            style: Theme.of(context).textTheme.headlineMedium),
-        SizedBox(height: 30.0),
-        _ConfigurationForm(),
-        SizedBox(height: 30.0),
-        ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 120.0, maxWidth: 500.0),
-            child: _Dropzone()),
-        Spacer(),
-        Padding(
-            padding: EdgeInsets.only(bottom: 20.0),
-            child: Text(
-              '''© 2022 Open Commons
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Text('G.L.O.C.', style: Theme.of(context).textTheme.displayMedium),
+            Text('Graphical Lines of Code',
+                style: Theme.of(context).textTheme.headlineMedium),
+            SizedBox(height: 30.0),
+            _ConfigurationForm(),
+            SizedBox(height: 30.0),
+            ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: 120.0, maxWidth: 500.0),
+                child: _Dropzone()),
+            Spacer(),
+            Padding(
+                padding: EdgeInsets.only(bottom: 20.0),
+                child: Text(
+                  '''© 2022 Open Commons
 Created by Ben Greenberg, Spencer Howell, and Daniel Troutman
 CS540 @ UTK''',
-              style: Theme.of(context).textTheme.caption,
-              textAlign: TextAlign.center,
-            )),
-      ],
-    ));
+                  style: Theme.of(context).textTheme.caption,
+                  textAlign: TextAlign.center,
+                )),
+          ],
+        ));
   }
 }
 
@@ -92,7 +93,7 @@ class _DropzoneState extends State<_Dropzone> {
                   }
                 },
               ),
-              Center(child: Text('Or upload repo archive here.')),
+              Center(child: Text('Or upload results here.')),
             ])));
   }
 }
@@ -124,6 +125,7 @@ class _ConfigurationFormState extends State<_ConfigurationForm> {
             children: [
               DropdownButton(
                 value: type,
+                itemHeight: 64.0,
                 icon: const Icon(Icons.keyboard_arrow_down),
                 items: RequestType.values.map((RequestType type) {
                   return DropdownMenuItem(

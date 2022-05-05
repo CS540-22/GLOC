@@ -30,7 +30,7 @@ class LanguagePieChartState extends State<LanguagePieChart> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: Colors.white,
+        color: Colors.blue[50],
         child: SizedBox(
           height: 200,
           child: PieChart(

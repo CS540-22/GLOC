@@ -4,6 +4,7 @@ import 'package:gloc_ui/widgets/HistoryLineChart.dart';
 import 'package:flutter/material.dart';
 import 'package:gloc_ui/data/ClocResult.dart';
 import 'package:gloc_ui/widgets/LanguageCardList.dart';
+import 'package:gloc_ui/widgets/RepoTitle.dart';
 
 List<ClocResult> mockHistoryResult() {
   String jsonString =
@@ -27,6 +28,7 @@ class HistoryPage extends StatefulWidget {
 
 class HistoryPageState extends State<HistoryPage> {
   int clickedIndex = 0;
+  final _cardSpacing = 30.0;
 
   void updateClickedIndex(int newIdx) {
     setState(() {
@@ -36,33 +38,84 @@ class HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-            width: 500,
-            child: HistoryLineChart(
-              historyResult: widget.historyResult,
-              updateClickedIndex: updateClickedIndex,
-            )),
-        DownloadResults(results: widget.historyResult),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-                width: 400,
+    return Material(
+      color: Colors.blue[50],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          RepoTitle(url: widget.historyResult[0].giturl),
+          SizedBox(height: _cardSpacing),
+          SizedBox(
+              width: 500,
+              child: HistoryLineChart(
+                historyResult: widget.historyResult,
+                updateClickedIndex: updateClickedIndex,
+              )),
+          SizedBox(height: _cardSpacing),
+          DownloadResults(results: widget.historyResult),
+          SizedBox(height: _cardSpacing),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
                 height: 200,
-                child: LanguageCardList(widget
-                    .historyResult[widget.historyResult.length - 1].languages)),
-            SizedBox(
                 width: 400,
+                child: Column(
+                  children: [
+                    Text("Clicked Commit",
+                        style: Theme.of(context).textTheme.titleMedium),
+                    LanguageCardList(
+                        widget.historyResult[clickedIndex].languages, true),
+                  ],
+                ),
+              ),
+              SizedBox(
                 height: 200,
-                child: LanguageCardList(
-                    widget.historyResult[clickedIndex].languages)),
-          ],
-        ),
-      ],
+                width: 400,
+                child: Column(
+                  children: [
+                    Text("Latest Commit",
+                        style: Theme.of(context).textTheme.titleMedium),
+                    LanguageCardList(
+                        widget.historyResult[widget.historyResult.length - 1]
+                            .languages,
+                        true),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
+    // return Column(
+    //   mainAxisSize: MainAxisSize.min,
+    //   crossAxisAlignment: CrossAxisAlignment.center,
+    //   children: [
+    //     SizedBox(
+    //         width: 500,
+    //         child: HistoryLineChart(
+    //           historyResult: widget.historyResult,
+    //           updateClickedIndex: updateClickedIndex,
+    //         )),
+    //     DownloadResults(results: widget.historyResult),
+    //     Row(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         SizedBox(
+    //             width: 400,
+    //             height: 200,
+    //             child: LanguageCardList(widget
+    //                 .historyResult[widget.historyResult.length - 1].languages)),
+    //         SizedBox(
+    //             width: 400,
+    //             height: 200,
+    //             child: LanguageCardList(
+    //                 widget.historyResult[clickedIndex].languages)),
+    //       ],
+    //     ),
+    //   ],
+    // );
   }
 }

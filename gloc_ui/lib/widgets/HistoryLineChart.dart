@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_palette/flutter_palette.dart';
 import 'package:gloc_ui/data/ClocResult.dart';
 import 'package:gloc_ui/data/LanguageResult.dart';
 
@@ -88,7 +87,7 @@ class HistoryLineChartState extends State<HistoryLineChart> {
   LineTouchData get lineTouchData => LineTouchData(
       handleBuiltInTouches: true,
       touchTooltipData: LineTouchTooltipData(
-        tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+        tooltipBgColor: Colors.blueGrey,
       ),
       touchCallback: (e, r) {
         if (e is FlTapUpEvent && (r?.lineBarSpots?.length ?? 0) > 0) {
