@@ -15,20 +15,32 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+        color: Colors.blue[50],
         child: Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text('G.L.O.C.', style: Theme.of(context).textTheme.displayMedium),
-        Text('Graphical Lines of Code',
-            style: Theme.of(context).textTheme.headlineMedium),
-        SizedBox(height: 30.0),
-        _ConfigurationForm(),
-        SizedBox(height: 30.0),
-        // Expanded(child: _Dropzone()), //TODO add back in when design is finalized
-      ],
-    ));
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(),
+            Text('G.L.O.C.', style: Theme.of(context).textTheme.displayMedium),
+            Text('Graphical Lines of Code',
+                style: Theme.of(context).textTheme.headlineMedium),
+            SizedBox(height: 30.0),
+            _ConfigurationForm(),
+            SizedBox(height: 30.0),
+            ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: 120.0, maxWidth: 500.0),
+                child: _Dropzone()),
+            Spacer(),
+            Padding(
+                padding: EdgeInsets.only(bottom: 20.0),
+                child: Text(
+                  '''© 2022 Open Commons
+Created by Ben Greenberg, Spencer Howell, and Daniel Troutman
+CS540 @ UTK''',
+                  style: Theme.of(context).textTheme.caption,
+                  textAlign: TextAlign.center,
+                )),
+          ],
+        ));
   }
 }
 
@@ -47,7 +59,11 @@ class _DropzoneState extends State<_Dropzone> {
   Widget build(BuildContext context) {
     return Material(
         child: Container(
-            color: isHighlighted ? Colors.green : Colors.white,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: isHighlighted
+                    ? Theme.of(context).primaryColorLight
+                    : Theme.of(context).cardColor),
             child: Stack(children: [
               DropzoneView(
                 operation: DragOperation.copy,
@@ -77,7 +93,7 @@ class _DropzoneState extends State<_Dropzone> {
                   }
                 },
               ),
-              Center(child: Text('Drop results here')),
+              Center(child: Text('Or upload results here!')),
             ])));
   }
 }
@@ -107,6 +123,23 @@ class _ConfigurationFormState extends State<_ConfigurationForm> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              DropdownButton(
+                value: type,
+                itemHeight: 64.0,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: RequestType.values.map((RequestType type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(
+                        type.name[0].toUpperCase() + type.name.substring(1)),
+                  );
+                }).toList(),
+                onChanged: (RequestType? newValue) {
+                  setState(() {
+                    type = newValue!;
+                  });
+                },
+              ),
               ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 400.0),
                   child: Padding(
@@ -129,28 +162,38 @@ class _ConfigurationFormState extends State<_ConfigurationForm> {
                       },
                     ),
                   )),
-              DropdownButton(
-                value: type,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                items: RequestType.values.map((RequestType type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(
-                        type.name[0].toUpperCase() + type.name.substring(1)),
-                  );
-                }).toList(),
-                onChanged: (RequestType? newValue) {
-                  setState(() {
-                    type = newValue!;
-                  });
-                },
-              ),
             ],
           ),
           if (type == RequestType.history)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 250.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          controller: stepController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          decoration: InputDecoration(
+                              labelText: "Step",
+                              icon: Icon(
+                                Icons.redo,
+                                size: 25,
+                              )),
+                          validator: (value) {
+                            if (value == null)
+                              return "Please enter valid number";
+                            int? step = int.tryParse(value);
+                            if (step == null)
+                              return "Please enter valid number";
+                            if (step < 1) return "Step must be greater than 0";
+                            return null;
+                          }),
+                    )),
                 ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: 250.0),
                     child: Padding(
@@ -175,32 +218,6 @@ class _ConfigurationFormState extends State<_ConfigurationForm> {
                               return "Please enter valid number";
                             if (limit < 1)
                               return "Limit must be greater than 0";
-                            return null;
-                          }),
-                    )),
-                ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 250.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                          controller: stepController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          ],
-                          decoration: InputDecoration(
-                              labelText: "Step",
-                              icon: Icon(
-                                Icons.redo,
-                                size: 25,
-                              )),
-                          validator: (value) {
-                            if (value == null)
-                              return "Please enter valid number";
-                            int? step = int.tryParse(value);
-                            if (step == null)
-                              return "Please enter valid number";
-                            if (step < 1) return "Step must be greater than 0";
                             return null;
                           }),
                     )),

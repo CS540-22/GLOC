@@ -11,15 +11,21 @@ class DownloadResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-        onPressed: () {
-          final content = base64Encode(jsonEncode(results).codeUnits);
-          AnchorElement(
-              href:
-                  "data:application/octet-stream;charset=utf-16le;base64,$content")
-            ..setAttribute("download", "results.json")
-            ..click();
-        },
-        child: const Text("Download Results"));
+    return Align(
+      alignment: Alignment.center,
+      child: LimitedBox(
+        maxWidth: 400.0,
+        child: ElevatedButton(
+            onPressed: () {
+              final content = base64Encode(jsonEncode(results).codeUnits);
+              AnchorElement(
+                  href:
+                      "data:application/octet-stream;charset=utf-16le;base64,$content")
+                ..setAttribute("download", "results.json")
+                ..click();
+            },
+            child: const Text("Download Results")),
+      ),
+    );
   }
 }

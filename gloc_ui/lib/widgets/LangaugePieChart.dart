@@ -30,7 +30,7 @@ class LanguagePieChartState extends State<LanguagePieChart> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: Colors.white,
+        color: Colors.blue[50],
         child: SizedBox(
           height: 200,
           child: PieChart(
@@ -108,8 +108,9 @@ class LanguagePieChartState extends State<LanguagePieChart> {
         title: graphLanguages[i].name,
         radius: radius,
         titleStyle: TextStyle(
+            fontFamily: 'IBMPlexMono',
             fontSize: fontSize,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.normal,
             color: const Color(0xffffffff)),
       );
     });
