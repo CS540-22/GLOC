@@ -5,7 +5,7 @@ import 'package:gloc_ui/widgets/HorizontalBarGraph.dart';
 import 'package:gloc_ui/widgets/LanguageCardList.dart';
 import 'package:gloc_ui/widgets/RepoTitle.dart';
 
-import '../widgets/LangaugePieChart.dart';
+import 'package:gloc_ui/widgets/LangaugePieChart.dart';
 
 class DetailsPage extends StatelessWidget {
   const DetailsPage({
@@ -22,7 +22,7 @@ class DetailsPage extends StatelessWidget {
       color: Colors.blue[50],
       child: LimitedBox(
         maxWidth: 400.0,
-        child: ListView(
+        child: Column(
           children: [
             if (clocResult.giturl != null) RepoTitle(url: clocResult.giturl),
             SizedBox(height: _cardSpacing),
@@ -39,8 +39,11 @@ class DetailsPage extends StatelessWidget {
             SizedBox(height: _cardSpacing * 2),
             DownloadResults(results: [clocResult]),
             SizedBox(height: _cardSpacing * 2),
-            Expanded(child: LanguageCardList(clocResult.languages, false)),
-            SizedBox(height: _cardSpacing * 2),
+            Expanded(
+              child: LanguageCardList(
+                  clocResult.languages, true),
+            ),
+            SizedBox(height: _cardSpacing),
           ],
         ),
       ),
