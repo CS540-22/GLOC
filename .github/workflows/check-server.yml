@@ -30,7 +30,7 @@ jobs:
       - name: OWASP ZAP Baseline Scan
         # You may pin to the exact commit or the version.
         # uses: zaproxy/action-baseline@df1ee70ea1ebbdaa1b48e6fc861e0dc0a71fedd8
-        uses: zaproxy/action-baseline@v0.6.1
+        uses: zaproxy/action-baseline@v0.8.2
         with:
           # Target URL
           target: https://gloc.homelab.benlg.dev
